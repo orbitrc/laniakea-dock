@@ -9,7 +9,7 @@ Rectangle {
   width: 64
   height: 64
 
-  color: "grey"
+  color: "#eff0f4"
 
   Text {
     width: root.width

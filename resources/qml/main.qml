@@ -5,12 +5,17 @@ Rectangle {
   width: 640
   height: 64
 
-  Repeater {
-    model: Dock.itemIds.length
-    Icon {
-      x: index * 64
-//      wId: Dock.itemIds[index]
-      itemId: Dock.itemIds[index]
+  color: "#a9a9a9"
+
+  Flow {
+    spacing: 1
+
+    Repeater {
+      model: Dock.itemIds.length
+      Icon {
+//        wId: Dock.itemIds[index]
+        itemId: Dock.itemIds[index]
+      }
     }
   }
 }
