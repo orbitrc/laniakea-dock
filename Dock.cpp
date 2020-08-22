@@ -9,6 +9,9 @@ Dock::Dock(QObject *parent)
 {
     this->_dpy = XOpenDisplay(NULL);
 
+    // Connect signals.
+    QObject::connect(this, &Dock::itemAdded, this, &Dock::onItemAdded);
+
     this->list_clients();
 }
 
@@ -16,6 +19,10 @@ Dock::~Dock()
 {
     XCloseDisplay(this->_dpy);
 }
+
+//====================
+// Property methods
+//====================
 
 QList<int> Dock::windows() const
 {
@@ -33,6 +40,17 @@ QList<QString> Dock::pinnedIds() const
     return ids;
 }
 
+QList<QString> Dock::itemIds() const
+{
+    QList<QString> ids;
+    for (int i = 0; i < this->m_items.length(); ++i) {
+        ids.append(this->m_items[i]->id());
+    }
+
+    return ids;
+}
+
+
 void Dock::appendItem(Item::ItemType type, QString cls, bool pinned)
 {
     Item *item = new Item;
@@ -41,6 +59,27 @@ void Dock::appendItem(Item::ItemType type, QString cls, bool pinned)
     item->setPinned(pinned);
 
     this->m_items.append(item);
+
+    emit this->itemAdded();
+}
+
+//=========================
+// Q_INVOKABLE methods
+//=========================
+QString Dock::itemClassById(const QString& id) const
+{
+    for (int i = 0; i < this->m_items.length(); ++i) {
+        if (this->m_items[i]->id() == id) {
+            auto cls = this->m_items[i]->cls();
+            if (cls.has_value()) {
+                return cls.value();
+            } else {
+                return QString();
+            }
+        }
+    }
+
+    return QString();
 }
 
 
@@ -87,6 +126,12 @@ void Dock::list_clients()
                 this->m_windows.append(((Window*)ret)[i]);
                 QString wm_class = this->get_wm_class(((Window*)ret)[i]);
                 fprintf(stderr, "%s\n", wm_class.toStdString().c_str());
+                // Add item if not exists yet.
+                Item *item = this->find_item_by_class(wm_class);
+                if (item == nullptr) {
+                    this->appendItem(Item::ItemType::DesktopEntry, wm_class);
+                    item = this->find_item_by_class(wm_class);
+                }
             }
         }
         emit this->windowsChanged();
@@ -94,6 +139,10 @@ void Dock::list_clients()
 
     XFree(ret);
 }
+
+//========================
+// Private methods
+//========================
 
 bool Dock::is_normal_window(unsigned long w_id) const
 {
@@ -191,4 +240,26 @@ QString Dock::get_wm_class(unsigned long w_id) const
     XFree(ret);
 
     return result;
+}
+
+Item* Dock::find_item_by_class(const QString &cls)
+{
+    Item *found = nullptr;
+    for (int i = 0; i < this->m_items.length(); ++i) {
+        auto item_cls = this->m_items[i]->cls();
+        if (item_cls.has_value() && item_cls.value() == cls) {
+            found = this->m_items[i];
+        }
+    }
+
+    return found;
+}
+
+//===================
+// Slots
+//===================
+
+void Dock::onItemAdded()
+{
+    emit this->itemIdsChanged();
 }

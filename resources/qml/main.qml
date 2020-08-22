@@ -6,10 +6,11 @@ Rectangle {
   height: 64
 
   Repeater {
-    model: Dock.windows.length
+    model: Dock.itemIds.length
     Icon {
       x: index * 64
-      wId: Dock.windows[index]
+//      wId: Dock.itemIds[index]
+      itemId: Dock.itemIds[index]
     }
   }
 }

@@ -4,6 +4,7 @@ Rectangle {
   id: root
 
   property int wId
+  property string itemId
 
   width: 64
   height: 64
@@ -11,7 +12,10 @@ Rectangle {
   color: "grey"
 
   Text {
-    text: '0x' + root.wId.toString(16)
-    font.pixelSize: 8
+    width: root.width
+
+    text: Dock.itemClassById(root.itemId)
+    font.pixelSize: 10
+    wrapMode: Text.WrapAnywhere
   }
 }
