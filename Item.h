@@ -33,6 +33,7 @@ public:
 
     QList<int> windows() const;
     void appendWindow(int wId);
+    void removeWindow(int wId);
 
 signals:
 

@@ -57,6 +57,8 @@ private:
 
 signals:
     void windowsChanged();
+    void windowAdded(unsigned long wId);
+    void windowRemoved(unsigned long wId);
     void pinnedIdsChanged();
     void itemIdsChanged();
     void itemAdded();
@@ -66,6 +68,8 @@ signals:
 public slots:
     void onItemAdded();
     void onActiveWindowChanged();
+    void onWindowAdded(unsigned long wId);
+    void onWindowRemoved(unsigned long wId);
 
 private:
     QList<int> m_windows;

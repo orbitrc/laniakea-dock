@@ -62,3 +62,8 @@ void Item::appendWindow(int wId)
 {
     this->m_wIds.append(wId);
 }
+
+void Item::removeWindow(int wId)
+{
+    this->m_wIds.removeOne(wId);
+}

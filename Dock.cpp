@@ -14,6 +14,8 @@ Dock::Dock(QObject *parent)
     // Connect signals.
     QObject::connect(this, &Dock::itemAdded, this, &Dock::onItemAdded);
     QObject::connect(this, &Dock::activeWindowItemIdChanged, this, &Dock::onActiveWindowChanged);
+    QObject::connect(this, &Dock::windowAdded, this, &Dock::onWindowAdded);
+    QObject::connect(this, &Dock::windowRemoved, this, &Dock::onWindowRemoved);
 
     this->list_clients();
     this->update_active_window();
@@ -151,25 +153,30 @@ void Dock::list_clients()
         return;
     }
 
-    if (static_cast<unsigned long>(this->m_windows.length()) != n_items) {
-//        n_windows = n_items;
-//        printf("n_items: %d\n", n_items);
-        for (unsigned long i = 0; i < n_items; ++i) {
-//            printf("0x%08x\n", ((Window*)ret)[i]);
-            if (this->is_normal_window(((Window*)ret)[i])) {
-                this->m_windows.append(((Window*)ret)[i]);
-                QString wm_class = this->get_wm_class(((Window*)ret)[i]);
-                fprintf(stderr, "%s\n", wm_class.toStdString().c_str());
-                // Add item if not exists yet.
-                Item *item = this->find_item_by_class(wm_class);
-                if (item == nullptr) {
-                    this->appendItem(Item::ItemType::DesktopEntry, wm_class);
-                    item = this->find_item_by_class(wm_class);
-                }
-            }
+    QList<int> old_windows = this->m_windows;
+    QList<int> new_windows;
+
+    for (unsigned long i = 0; i < n_items; ++i) {
+        Window w = ((Window*)ret)[i];
+        if (this->is_normal_window(w)) {
+            new_windows.append(w);
         }
-        emit this->windowsChanged();
     }
+
+    // Compare old and new.
+    for (int i = 0; i < new_windows.length(); ++i) {
+        if (!old_windows.contains(new_windows[i])) {
+            // Window is added.
+            emit this->windowAdded(new_windows[i]);
+        }
+    }
+    for (int i = 0; i < old_windows.length(); ++i) {
+        if (!new_windows.contains(old_windows[i])) {
+            // Window is removed.
+            emit this->windowRemoved(old_windows[i]);
+        }
+    }
+    this->m_windows = new_windows;
 
     XFree(ret);
 }
@@ -292,7 +299,6 @@ Item* Dock::find_item_by_class(const QString &cls)
 void Dock::monitor_x_events()
 {
     XSetWindowAttributes attrs;
-
     // Atoms
     Atom atom_net_active_window;
 
@@ -309,6 +315,10 @@ void Dock::monitor_x_events()
         if (evt.type == PropertyNotify
                 && evt.xproperty.atom == atom_net_active_window) {
             this->update_active_window();
+        }
+        if (evt.type == ConfigureNotify || evt.type == CreateNotify ||
+                evt.type == DestroyNotify) {
+            this->list_clients();
         }
     }
     fprintf(stderr, "X event monitoring stopped.\n");
@@ -344,4 +354,34 @@ void Dock::onItemAdded()
 void Dock::onActiveWindowChanged()
 {
     emit this->activeWindowItemIdChanged();
+}
+
+void Dock::onWindowAdded(unsigned long wId)
+{
+    emit this->windowsChanged();
+
+    QString wm_class = this->get_wm_class(wId);
+
+    Item *item = this->find_item_by_class(wm_class);
+    // Add an item if not exists yet.
+    if (item == nullptr) {
+        this->appendItem(Item::ItemType::DesktopEntry, wm_class);
+        item = this->find_item_by_class(wm_class);
+    }
+    item->appendWindow(wId);
+}
+
+void Dock::onWindowRemoved(unsigned long wId)
+{
+    emit this->windowsChanged();
+
+    QString wm_class = this->get_wm_class(wId);
+
+    Item *item = this->find_item_by_class(wm_class);
+    item->removeWindow(wId);
+    // Remove an item if obsolete now.
+    if (item->windows().length() == 0 && !item->pinned()) {
+        this->m_items.removeOne(item);
+        emit this->itemIdsChanged();
+    }
 }
