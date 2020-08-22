@@ -52,3 +52,13 @@ void Item::clearCls()
 {
     this->m_class.reset();
 }
+
+QList<int> Item::windows() const
+{
+    return this->m_wIds;
+}
+
+void Item::appendWindow(int wId)
+{
+    this->m_wIds.append(wId);
+}

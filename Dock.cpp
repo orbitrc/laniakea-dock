@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+#include <QThread>
+
 #include <X11/Xatom.h>
 
 Dock::Dock(QObject *parent)
@@ -11,12 +13,25 @@ Dock::Dock(QObject *parent)
 
     // Connect signals.
     QObject::connect(this, &Dock::itemAdded, this, &Dock::onItemAdded);
+    QObject::connect(this, &Dock::activeWindowItemIdChanged, this, &Dock::onActiveWindowChanged);
 
     this->list_clients();
+    this->update_active_window();
+
+    // Run workers.
+    this->thr_monitor_x = QThread::create([this]() {
+        this->monitor_x_events();
+    });
+    this->thr_monitor_x->start();
 }
 
 Dock::~Dock()
 {
+    this->x_event_monitoring = false;
+    this->thr_monitor_x->exit();
+    while (this->thr_monitor_x->isRunning()) {
+    }
+
     XCloseDisplay(this->_dpy);
 }
 
@@ -61,6 +76,25 @@ void Dock::appendItem(Item::ItemType type, QString cls, bool pinned)
     this->m_items.append(item);
 
     emit this->itemAdded();
+}
+
+QString Dock::activeWindowItemId() const
+{
+    Item *item = nullptr;
+    for (int i = 0; i < this->m_items.length(); ++i) {
+        auto windows = this->m_items[i]->windows();
+        for (int j = 0; j < windows.length(); ++j) {
+            if (windows[j] == this->m_activeWindow) {
+                item = this->m_items[i];
+            }
+        }
+    }
+
+    if (item != nullptr) {
+        return item->id();
+    }
+
+    return QString();
 }
 
 //=========================
@@ -255,6 +289,49 @@ Item* Dock::find_item_by_class(const QString &cls)
     return found;
 }
 
+void Dock::monitor_x_events()
+{
+    XSetWindowAttributes attrs;
+
+    // Atoms
+    Atom atom_net_active_window;
+
+    // Get atoms.
+    atom_net_active_window = XInternAtom(this->_dpy, "_NET_ACTIVE_WINDOW", False);
+
+    attrs.event_mask = PropertyChangeMask | SubstructureNotifyMask | StructureNotifyMask;
+    XChangeWindowAttributes(this->_dpy, XDefaultRootWindow(this->_dpy), CWEventMask, &attrs);
+    this->x_event_monitoring = true;
+    while (this->x_event_monitoring) {
+        XEvent evt;
+        XNextEvent(this->_dpy, &evt);
+        // Active window changed.
+        if (evt.type == PropertyNotify
+                && evt.xproperty.atom == atom_net_active_window) {
+            this->update_active_window();
+        }
+    }
+    fprintf(stderr, "X event monitoring stopped.\n");
+}
+
+void Dock::update_active_window()
+{
+    unsigned long size;
+    unsigned char *ret;
+
+    ret = this->get_window_property(XDefaultRootWindow(this->_dpy),
+        "_NET_ACTIVE_WINDOW", XA_WINDOW, &size);
+
+    Window w = ((Window*)ret)[0];
+    if ((int)w != this->m_activeWindow) {
+        this->m_activeWindow = w;
+
+        emit this->activeWindowChanged();
+    }
+
+    XFree(ret);
+}
+
 //===================
 // Slots
 //===================
@@ -262,4 +339,9 @@ Item* Dock::find_item_by_class(const QString &cls)
 void Dock::onItemAdded()
 {
     emit this->itemIdsChanged();
+}
+
+void Dock::onActiveWindowChanged()
+{
+    emit this->activeWindowItemIdChanged();
 }

@@ -31,6 +31,9 @@ public:
     void setCls(const QString& cls);
     void clearCls();
 
+    QList<int> windows() const;
+    void appendWindow(int wId);
+
 signals:
 
 private:

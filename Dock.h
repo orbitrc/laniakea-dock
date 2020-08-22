@@ -7,6 +7,8 @@
 
 #include "Item.h"
 
+class QThread;
+
 class Dock : public QObject
 {
     Q_OBJECT
@@ -14,13 +16,18 @@ class Dock : public QObject
     Q_PROPERTY(QList<int> windows READ windows NOTIFY windowsChanged)
     Q_PROPERTY(QList<QString> pinnedIds READ pinnedIds NOTIFY pinnedIdsChanged)
     Q_PROPERTY(QList<QString> itemIds READ itemIds NOTIFY itemIdsChanged)
+    Q_PROPERTY(QString activeWindowItemId READ activeWindowItemId NOTIFY activeWindowItemIdChanged)
 public:
     explicit Dock(QObject *parent = nullptr);
     ~Dock();
 
+    //=====================
+    // Property methods
+    //=====================
     QList<int> windows() const;
     QList<QString> pinnedIds() const;
     QList<QString> itemIds() const;
+    QString activeWindowItemId() const;
 
     void appendItem(Item::ItemType type, QString cls, bool pinned = false);
 
@@ -29,11 +36,23 @@ public:
     void list_clients();
 
 private:
-    bool is_normal_window(unsigned long w_id) const;
-    QString get_wm_class(unsigned long w_id) const;
+    //=======================
+    // X property methods
+    //=======================
     unsigned char* get_window_property(unsigned long w_id, const char *prop_name,
             Atom req_type, unsigned long *size) const;
+    bool is_normal_window(unsigned long w_id) const;
+    QString get_wm_class(unsigned long w_id) const;
+    void update_active_window();
 
+    //======================
+    // Monitor methods
+    //======================
+    void monitor_x_events();
+
+    //======================
+    // Helper methods
+    //======================
     Item* find_item_by_class(const QString& cls);
 
 signals:
@@ -41,15 +60,22 @@ signals:
     void pinnedIdsChanged();
     void itemIdsChanged();
     void itemAdded();
+    void activeWindowChanged();
+    void activeWindowItemIdChanged();
 
 public slots:
     void onItemAdded();
+    void onActiveWindowChanged();
 
 private:
     QList<int> m_windows;
     QList<Item*> m_items;
+    int m_activeWindow;
 
     Display *_dpy;
+
+    bool x_event_monitoring;
+    QThread *thr_monitor_x;
 };
 
 #endif // DOCK_H
