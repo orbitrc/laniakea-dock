@@ -32,6 +32,8 @@ public:
     void appendItem(Item::ItemType type, QString cls, bool pinned = false);
 
     Q_INVOKABLE QString itemClassById(const QString& id) const;
+    Q_INVOKABLE QList<int> itemWindowsById(const QString& id) const;
+    Q_INVOKABLE void activateWindow(int wId);
 
     void list_clients();
 
@@ -44,6 +46,8 @@ private:
     bool is_normal_window(unsigned long w_id) const;
     QString get_wm_class(unsigned long w_id) const;
     void update_active_window();
+
+    void activate_window(unsigned long w_id);
 
     //======================
     // Monitor methods

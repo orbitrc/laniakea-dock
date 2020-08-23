@@ -18,6 +18,15 @@ Rectangle {
     font.pixelSize: 10
     wrapMode: Text.WrapAnywhere
   }
+  Text {
+    id: debugMessage
+
+    anchors.bottom: parent.bottom
+
+    text: ''
+    font.pixelSize: 9
+  }
+
   Rectangle {
     anchors.centerIn: parent
 
@@ -25,6 +34,17 @@ Rectangle {
     height: 48
 
     color: isActive() ? "grey" : "transparent"
+  }
+  MouseArea {
+    anchors.fill: parent
+
+    onClicked: {
+      let wins = Dock.itemWindowsById(root.itemId);
+      debugMessage.text = wins.length;
+      if (wins.length === 1) {
+        Dock.activateWindow(wins[0]);
+      }
+    }
   }
 
   function isActive() {

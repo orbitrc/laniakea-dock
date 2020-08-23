@@ -118,6 +118,23 @@ QString Dock::itemClassById(const QString& id) const
     return QString();
 }
 
+QList<int> Dock::itemWindowsById(const QString &id) const
+{
+    for (int i = 0; i < this->m_items.length(); ++i) {
+        if (this->m_items[i]->id() == id) {
+            auto windows = this->m_items[i]->windows();
+            return windows;
+        }
+    }
+
+    return QList<int>();
+}
+
+void Dock::activateWindow(int wId)
+{
+    this->activate_window(wId);
+}
+
 
 void Dock::list_clients()
 {
@@ -354,6 +371,34 @@ void Dock::update_active_window()
     }
 
     XFree(ret);
+}
+
+void Dock::activate_window(unsigned long w_id)
+{
+    XClientMessageEvent evt;
+    // Atoms.
+    Atom atom_net_active_window;
+
+    atom_net_active_window = XInternAtom(this->_dpy, "_NET_ACTIVE_WINDOW", False);
+
+    evt.type = ClientMessage;
+    evt.window = w_id;
+    evt.message_type = atom_net_active_window;
+    evt.format = 32;
+    evt.data.l[0] = 2;  // 2 = pager
+    evt.data.l[1] = CurrentTime;    // timestamp
+    evt.data.l[2] = 0;
+    evt.data.l[3] = 0;
+    evt.data.l[4] = 0;
+
+    XSendEvent(
+        this->_dpy,
+        XDefaultRootWindow(this->_dpy),
+        False,
+        PropertyChangeMask,
+        (XEvent*)&evt
+    );
+    XFlush(this->_dpy);
 }
 
 //===================
