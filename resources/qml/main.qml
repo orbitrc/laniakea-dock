@@ -2,7 +2,7 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 
 Rectangle {
-  width: 640
+  width: 800
   height: 64
 
   color: "#a9a9a9"
@@ -15,6 +15,26 @@ Rectangle {
       Icon {
 //        wId: Dock.itemIds[index]
         itemId: Dock.itemIds[index]
+      }
+    }
+  }
+
+  // Debug quit button
+  Rectangle {
+    id: debugQuitButton
+
+    color: "red"
+
+    anchors.right: parent.right
+
+    width: 20
+    height: 20
+
+    MouseArea {
+      anchors.fill: parent
+
+      onClicked: {
+        Qt.quit();
       }
     }
   }

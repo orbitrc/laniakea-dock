@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("Dock", QVariant::fromValue(&dock));
 
     QQuickWidget widget(&engine, nullptr);
-//    widget.setAttribute(Qt::WA_X11NetWmWindowTypeDock);
+    widget.setAttribute(Qt::WA_X11NetWmWindowTypeDock);
     widget.setSource(url);
 
     widget.show();

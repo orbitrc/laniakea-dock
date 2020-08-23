@@ -135,6 +135,11 @@ void Dock::activateWindow(int wId)
     this->activate_window(wId);
 }
 
+void Dock::debugPrint(const QString &str) const
+{
+    fprintf(stderr, "DEBUG: %s\n", str.toStdString().c_str());
+}
+
 
 void Dock::list_clients()
 {

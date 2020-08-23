@@ -34,6 +34,7 @@ public:
     Q_INVOKABLE QString itemClassById(const QString& id) const;
     Q_INVOKABLE QList<int> itemWindowsById(const QString& id) const;
     Q_INVOKABLE void activateWindow(int wId);
+    Q_INVOKABLE void debugPrint(const QString& str) const;
 
     void list_clients();
 
