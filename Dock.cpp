@@ -13,7 +13,7 @@ Dock::Dock(QObject *parent)
 
     // Connect signals.
     QObject::connect(this, &Dock::itemAdded, this, &Dock::onItemAdded);
-    QObject::connect(this, &Dock::activeWindowItemIdChanged, this, &Dock::onActiveWindowChanged);
+    QObject::connect(this, &Dock::activeWindowChanged, this, &Dock::onActiveWindowChanged);
     QObject::connect(this, &Dock::windowAdded, this, &Dock::onWindowAdded);
     QObject::connect(this, &Dock::windowRemoved, this, &Dock::onWindowRemoved);
 
@@ -176,6 +176,7 @@ void Dock::list_clients()
             emit this->windowRemoved(old_windows[i]);
         }
     }
+
     this->m_windows = new_windows;
 
     XFree(ret);
@@ -296,6 +297,19 @@ Item* Dock::find_item_by_class(const QString &cls)
     return found;
 }
 
+Item* Dock::find_item_by_w_id(unsigned long w_id)
+{
+    Item *found = nullptr;
+    for (int i = 0; i < this->m_items.length(); ++i) {
+        auto windows = this->m_items[i]->windows();
+        if (windows.contains(w_id)) {
+            found = this->m_items[i];
+        }
+    }
+
+    return found;
+}
+
 void Dock::monitor_x_events()
 {
     XSetWindowAttributes attrs;
@@ -375,9 +389,7 @@ void Dock::onWindowRemoved(unsigned long wId)
 {
     emit this->windowsChanged();
 
-    QString wm_class = this->get_wm_class(wId);
-
-    Item *item = this->find_item_by_class(wm_class);
+    Item *item = this->find_item_by_w_id(wId);
     item->removeWindow(wId);
     // Remove an item if obsolete now.
     if (item->windows().length() == 0 && !item->pinned()) {

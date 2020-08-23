@@ -54,6 +54,7 @@ private:
     // Helper methods
     //======================
     Item* find_item_by_class(const QString& cls);
+    Item* find_item_by_w_id(unsigned long w_id);
 
 signals:
     void windowsChanged();

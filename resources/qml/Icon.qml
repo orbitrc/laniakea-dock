@@ -18,4 +18,16 @@ Rectangle {
     font.pixelSize: 10
     wrapMode: Text.WrapAnywhere
   }
+  Rectangle {
+    anchors.centerIn: parent
+
+    width: 48
+    height: 48
+
+    color: isActive() ? "grey" : "transparent"
+  }
+
+  function isActive() {
+    return root.itemId == Dock.activeWindowItemId;
+  }
 }
