@@ -258,6 +258,7 @@ bool Dock::is_normal_window(unsigned long w_id) const
 unsigned char* Dock::get_window_property(unsigned long w_id, const char *prop_name,
         Atom req_type, unsigned long *size) const
 {
+    Display *dpy;   // To prevent thread blocking.
     Atom prop;
     Atom ret_type;
     int ret_format;
@@ -266,11 +267,13 @@ unsigned char* Dock::get_window_property(unsigned long w_id, const char *prop_na
     unsigned char *ret;
     int result;
 
+    dpy = XOpenDisplay(NULL);
+
     // Get property.
-    prop = XInternAtom(this->_dpy, prop_name, False);
+    prop = XInternAtom(dpy, prop_name, False);
 
     result = XGetWindowProperty(
-        this->_dpy,
+        dpy,
         w_id,
         prop,
         0,
@@ -285,6 +288,8 @@ unsigned char* Dock::get_window_property(unsigned long w_id, const char *prop_na
     );
 
     *size = n_items;
+
+    XCloseDisplay(dpy);
 
     return ret;
 }
