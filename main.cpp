@@ -4,6 +4,7 @@
 
 #include <QQuickWidget>
 
+#include "DockWidget.h"
 #include "Dock.h"
 
 int main(int argc, char *argv[])
@@ -23,7 +24,7 @@ int main(int argc, char *argv[])
     Dock dock;
     engine.rootContext()->setContextProperty("Dock", QVariant::fromValue(&dock));
 
-    QQuickWidget widget(&engine, nullptr);
+    DockWidget widget(&engine, nullptr);
     widget.setAttribute(Qt::WA_X11NetWmWindowTypeDock);
     widget.setSource(url);
 
