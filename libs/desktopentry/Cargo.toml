@@ -1,0 +1,11 @@
+[package]
+name = "desktopentry"
+version = "0.1.0"
+authors = ["Yujeonja <hardboiled65@gmail.com>"]
+edition = "2018"
+
+[lib]
+name = "desktopentry"
+crate-type = ["cdylib"]
+
+[dependencies]
