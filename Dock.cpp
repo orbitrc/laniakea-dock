@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <algorithm>
 
+#include <QPainter>
 #include <QThread>
 
 #include <X11/Xatom.h>
@@ -112,10 +113,13 @@ QPixmap Dock::current_window_icon(const QString &id) const
     }
 
     if (item != nullptr && item->windows().length() > 0) {
+        fprintf(stderr, "Dock::current_window_icon - Found item: %s\n", item->id().toStdString().c_str());
         return this->get_window_icon(item->windows()[0], 48);
     }
 
-    return QPixmap();
+    QPixmap default_pixmap(1, 1);
+    default_pixmap.fill(QColor(0, 255, 0, 100));
+    return default_pixmap;
 }
 
 //=========================
@@ -363,10 +367,37 @@ QPixmap Dock::get_window_icon(unsigned long w_id, unsigned long req_size) const
         }
     }
     fprintf(stderr, "ideal size: %ld\n", ideal_size);
+    // Find ideal icon size position.
+    icon = (unsigned long*)ret;
+    while (true) {
+        if (ideal_size == 0) {
+            break;
+        }
+        unsigned long width = *icon++;
+        unsigned long height = *icon++;
+        if (width == ideal_size) {
+            icon -= 2;
+            break;
+        }
+        icon += width * height;
+    }
+    // Draw pixmap.
+    unsigned long width = ideal_size > 0 ? *icon++ : 0;
+    unsigned long height = ideal_size > 0 ? *icon++ : 0;
+    QPixmap pixmap(ideal_size, ideal_size);
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
+    for (unsigned long i = 0; i < width; ++i) {
+        for (unsigned long j = 0; j < height; ++j) {
+            unsigned char *argb = (unsigned char*)icon++;
+            painter.setPen(QColor(argb[2], argb[1], argb[0], argb[3]));
+            painter.drawPoint(j, i);
+        }
+    }
 
     XFree(ret);
 
-    return QPixmap();
+    return pixmap;
 }
 
 Item* Dock::find_item_by_class(const QString &cls)
