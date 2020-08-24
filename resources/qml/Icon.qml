@@ -1,4 +1,5 @@
 import QtQuick 2.12
+import QtGraphicalEffects 1.0
 
 Rectangle {
   id: root
@@ -27,22 +28,71 @@ Rectangle {
     font.pixelSize: 9
   }
 
-  Rectangle {
+  Item {
+    id: innerShadowSource
+
+    anchors.fill: parent
+
+    Rectangle {
+      id: activeIndicator
+
+      anchors.centerIn: parent
+
+      width: 52
+      height: 52
+
+      radius: 10
+
+      color: root.color
+    }
+  }
+
+  InnerShadow {
+    id: topLeftShadow
+
+    visible: isActive()
+
+    anchors.fill: innerShadowSource
+    source: innerShadowSource
+    horizontalOffset: 2
+    verticalOffset: 2
+    radius: 2
+    samples: 16
+    color: "#808080"
+  }
+
+  InnerShadow {
+    id: bottomRightShadow
+
+    visible: isActive()
+
+    anchors.fill: innerShadowSource
+    source: innerShadowSource
+    horizontalOffset: -2
+    verticalOffset: -2
+    radius: 2
+    samples: 16
+    color: "#ffffff"
+  }
+
+  Blend {
+    visible: isActive()
+
+    anchors.fill: topLeftShadow
+    source: topLeftShadow
+    foregroundSource: bottomRightShadow
+    mode: "average"
+  }
+
+  Image {
+    id: iconImage
+
     anchors.centerIn: parent
 
     width: 48
     height: 48
 
-    color: isActive() ? "grey" : "transparent"
-
-    Image {
-      id: iconImage
-
-      width: 48
-      height: 48
-
-      source: 'image://icons/' + root.itemId
-    }
+    source: 'image://icons/' + root.itemId
   }
   MouseArea {
     anchors.fill: parent
