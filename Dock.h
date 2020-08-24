@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include <QPixmap>
+
 #include <X11/Xlib.h>
 
 #include "Item.h"
@@ -36,6 +38,8 @@ public:
     Q_INVOKABLE void activateWindow(int wId);
     Q_INVOKABLE void debugPrint(const QString& str) const;
 
+    QPixmap current_window_icon(const QString& id) const;
+
     void list_clients();
 
 private:
@@ -46,6 +50,7 @@ private:
             Atom req_type, unsigned long *size) const;
     bool is_normal_window(unsigned long w_id) const;
     QString get_wm_class(unsigned long w_id) const;
+    QPixmap get_window_icon(unsigned long w_id) const;
     void update_active_window();
 
     void activate_window(unsigned long w_id);

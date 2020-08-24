@@ -1,5 +1,7 @@
 #include "IconImageProvider.h"
 
+#include "Dock.h"
+
 IconImageProvider::IconImageProvider(Dock *dock)
     : QQuickImageProvider(QQuickImageProvider::Pixmap)
 {
@@ -18,6 +20,8 @@ QPixmap IconImageProvider::requestPixmap(const QString& id, QSize *size, const Q
         requestedSize.width() > 0 ? requestedSize.width() : width,
         requestedSize.height() > 0 ? requestedSize.height() : height
     );
+
+    QPixmap p = this->_dock->current_window_icon(id);
 
     pixmap.fill(QColor(id).rgba());
 

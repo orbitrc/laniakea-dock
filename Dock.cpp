@@ -99,6 +99,24 @@ QString Dock::activeWindowItemId() const
     return QString();
 }
 
+QPixmap Dock::current_window_icon(const QString &id) const
+{
+    Item *item = nullptr;
+
+    for (int i = 0; i < this->m_items.length(); ++i) {
+        if (this->m_items[i]->id() == id) {
+            item = this->m_items[i];
+            break;
+        }
+    }
+
+    if (item != nullptr && item->windows().length() > 0) {
+        return this->get_window_icon(item->windows()[0]);
+    }
+
+    return QPixmap();
+}
+
 //=========================
 // Q_INVOKABLE methods
 //=========================
@@ -277,7 +295,7 @@ unsigned char* Dock::get_window_property(unsigned long w_id, const char *prop_na
         w_id,
         prop,
         0,
-        1024,
+        2097152,    // 2 ** 21
         False,
         req_type,
         &ret_type,
@@ -309,6 +327,29 @@ QString Dock::get_wm_class(unsigned long w_id) const
     XFree(ret);
 
     return result;
+}
+
+QPixmap Dock::get_window_icon(unsigned long w_id) const
+{
+    unsigned long size;
+    unsigned char *ret;
+    ret = this->get_window_property(w_id, "_NET_WM_ICON", XA_CARDINAL, &size);
+
+    fprintf(stderr, "%ld\n", size);
+    unsigned long *icon;
+    if (size != 0) {
+        icon = (unsigned long*)ret;
+        unsigned long width = *icon++;
+        unsigned long height = *icon++;
+        fprintf(stderr, "size: %ldx%ld\n", width, height);
+//        for (unsigned long i = 0; i < width * height; ++i) {
+//            fprintf(stderr, "[%ld: %ld] ", i, *icon++);
+//        }
+    }
+
+    XFree(ret);
+
+    return QPixmap();
 }
 
 Item* Dock::find_item_by_class(const QString &cls)

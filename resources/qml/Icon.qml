@@ -41,7 +41,7 @@ Rectangle {
       width: 48
       height: 48
 
-      source: "image://icons/yellow"
+      source: 'image://icons/' + root.itemId
     }
   }
   MouseArea {
