@@ -34,6 +34,15 @@ Rectangle {
     height: 48
 
     color: isActive() ? "grey" : "transparent"
+
+    Image {
+      id: iconImage
+
+      width: 48
+      height: 48
+
+      source: "image://icons/yellow"
+    }
   }
   MouseArea {
     anchors.fill: parent

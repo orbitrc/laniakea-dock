@@ -6,6 +6,7 @@
 
 #include "DockWidget.h"
 #include "Dock.h"
+#include "IconImageProvider.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,9 +22,15 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
 
+    // Dock instance.
     Dock dock;
     engine.rootContext()->setContextProperty("Dock", QVariant::fromValue(&dock));
 
+    // Icon image provider.
+    IconImageProvider *iconImageProvider = new IconImageProvider(&dock);
+    engine.addImageProvider(QLatin1String("icons"), iconImageProvider);
+
+    // Dock widget.
     DockWidget widget(&engine, nullptr);
     widget.setAttribute(Qt::WA_X11NetWmWindowTypeDock);
     widget.setSource(url);

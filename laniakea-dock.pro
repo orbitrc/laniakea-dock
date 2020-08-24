@@ -18,11 +18,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 HEADERS += \
     Dock.h \
     DockWidget.h \
+    IconImageProvider.h \
     Item.h
 
 SOURCES += \
     Dock.cpp \
     DockWidget.cpp \
+    IconImageProvider.cpp \
     Item.cpp \
     main.cpp
 
