@@ -1,6 +1,7 @@
 #include "Dock.h"
 
 #include <stdio.h>
+#include <algorithm>
 
 #include <QThread>
 
@@ -111,7 +112,7 @@ QPixmap Dock::current_window_icon(const QString &id) const
     }
 
     if (item != nullptr && item->windows().length() > 0) {
-        return this->get_window_icon(item->windows()[0]);
+        return this->get_window_icon(item->windows()[0], 48);
     }
 
     return QPixmap();
@@ -295,7 +296,7 @@ unsigned char* Dock::get_window_property(unsigned long w_id, const char *prop_na
         w_id,
         prop,
         0,
-        2097152,    // 2 ** 21
+        4194304,    // 2 ** 22
         False,
         req_type,
         &ret_type,
@@ -329,7 +330,7 @@ QString Dock::get_wm_class(unsigned long w_id) const
     return result;
 }
 
-QPixmap Dock::get_window_icon(unsigned long w_id) const
+QPixmap Dock::get_window_icon(unsigned long w_id, unsigned long req_size) const
 {
     unsigned long size;
     unsigned char *ret;
@@ -337,15 +338,31 @@ QPixmap Dock::get_window_icon(unsigned long w_id) const
 
     fprintf(stderr, "%ld\n", size);
     unsigned long *icon;
-    if (size != 0) {
-        icon = (unsigned long*)ret;
+    icon = (unsigned long*)ret;
+
+    // Get available icon sizes.
+    QList<unsigned long> sizes;
+    unsigned long *end = icon + size;
+    while (icon != end) {
         unsigned long width = *icon++;
         unsigned long height = *icon++;
         fprintf(stderr, "size: %ldx%ld\n", width, height);
-//        for (unsigned long i = 0; i < width * height; ++i) {
-//            fprintf(stderr, "[%ld: %ld] ", i, *icon++);
-//        }
+        sizes.append(width);
+        if (width >= 1024) {
+            break;
+        }
+        icon += width * height;
     }
+    std::sort(sizes.begin(), sizes.end());
+    // Get ideal icon size.
+    unsigned long ideal_size = 0;
+    for (int i = 0; i < sizes.length(); ++i) {
+        ideal_size = sizes[i];
+        if (ideal_size >= req_size) {
+            break;
+        }
+    }
+    fprintf(stderr, "ideal size: %ld\n", ideal_size);
 
     XFree(ret);
 

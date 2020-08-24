@@ -50,7 +50,7 @@ private:
             Atom req_type, unsigned long *size) const;
     bool is_normal_window(unsigned long w_id) const;
     QString get_wm_class(unsigned long w_id) const;
-    QPixmap get_window_icon(unsigned long w_id) const;
+    QPixmap get_window_icon(unsigned long w_id, unsigned long req_size) const;
     void update_active_window();
 
     void activate_window(unsigned long w_id);
