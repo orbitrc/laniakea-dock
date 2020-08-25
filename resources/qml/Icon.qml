@@ -94,14 +94,22 @@ Rectangle {
 
     source: 'image://icons/' + root.itemId
   }
+
   MouseArea {
     anchors.fill: parent
 
+    acceptedButtons: Qt.LeftButton | Qt.RightButton
+
     onClicked: {
-      let wins = Dock.itemWindowsById(root.itemId);
-      debugMessage.text = wins.length;
-      if (wins.length === 1) {
-        Dock.activateWindow(wins[0]);
+      if (mouse.button === Qt.LeftButton) {
+        let wins = Dock.itemWindowsById(root.itemId);
+        debugMessage.text = wins.length;
+        if (wins.length === 1) {
+          Dock.activateWindow(wins[0]);
+        }
+      } else if (mouse.button === Qt.RightButton) {
+        debugMessage.text = 'right';
+        PopUpManager.showContextMenu(root.itemId);
       }
     }
   }

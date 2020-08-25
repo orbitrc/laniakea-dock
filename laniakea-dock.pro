@@ -1,4 +1,4 @@
-QT += quick quickwidgets
+QT += core quick quickwidgets
 
 CONFIG += c++17
 
@@ -19,13 +19,17 @@ HEADERS += \
     Dock.h \
     DockWidget.h \
     IconImageProvider.h \
-    Item.h
+    Item.h \
+    MenuWidget.h \
+    PopUpManager.h
 
 SOURCES += \
     Dock.cpp \
     DockWidget.cpp \
     IconImageProvider.cpp \
     Item.cpp \
+    MenuWidget.cpp \
+    PopUpManager.cpp \
     main.cpp
 
 RESOURCES += resources/resources.qrc

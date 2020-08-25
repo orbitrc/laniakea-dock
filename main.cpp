@@ -7,6 +7,7 @@
 #include "DockWidget.h"
 #include "Dock.h"
 #include "IconImageProvider.h"
+#include "PopUpManager.h"
 
 int main(int argc, char *argv[])
 {
@@ -29,6 +30,10 @@ int main(int argc, char *argv[])
     // Icon image provider.
     IconImageProvider *iconImageProvider = new IconImageProvider(&dock);
     engine.addImageProvider(QLatin1String("icons"), iconImageProvider);
+
+    // Pop up manager.
+    PopUpManager popUpManager(&engine, &dock);
+    engine.rootContext()->setContextProperty("PopUpManager", QVariant::fromValue(&popUpManager));
 
     // Dock widget.
     DockWidget widget(&engine, nullptr);
