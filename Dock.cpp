@@ -154,6 +154,24 @@ QList<int> Dock::itemWindowsById(const QString &id) const
     return QList<int>();
 }
 
+QRect Dock::itemIconGeometry(const QString &id) const
+{
+    Item *item = this->item_by_id(id);
+    if (item) {
+        return item->iconGeometry();
+    }
+
+    return QRect();
+}
+
+void Dock::itemSetIconGeometry(const QString &id, const QRect &rect)
+{
+    Item *item = this->item_by_id(id);
+    if (item) {
+        item->setIconGeometry(rect);
+    }
+}
+
 void Dock::activateWindow(int wId)
 {
     this->activate_window(wId);
@@ -162,6 +180,22 @@ void Dock::activateWindow(int wId)
 void Dock::debugPrint(const QString &str) const
 {
     fprintf(stderr, "DEBUG: %s\n", str.toStdString().c_str());
+}
+
+//=======================
+// Helper methods
+//=======================
+Item* Dock::item_by_id(const QString& id) const
+{
+    Item *item = nullptr;
+    for (int i = 0; i < this->m_items.length(); ++i) {
+        if (this->m_items[i]->id() == id) {
+            item = this->m_items[i];
+            break;
+        }
+    }
+
+    return item;
 }
 
 

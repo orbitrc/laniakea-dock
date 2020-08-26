@@ -5,6 +5,8 @@
 
 #include <optional>
 
+#include <QRect>
+
 class Item : public QObject
 {
     Q_OBJECT
@@ -35,6 +37,9 @@ public:
     void appendWindow(int wId);
     void removeWindow(int wId);
 
+    QRect iconGeometry() const;
+    void setIconGeometry(const QRect& rect);
+
 signals:
 
 private:
@@ -43,6 +48,7 @@ private:
     ItemType m_type;
     std::optional<QString> m_class;
     QList<int> m_wIds;
+    QRect m_iconGeometry;
 };
 
 #endif // ITEM_H

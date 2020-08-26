@@ -39,7 +39,6 @@ bool MenuWidget::event(QEvent *evt)
 
 void MenuWidget::mousePressEvent(QMouseEvent *evt)
 {
-    fprintf(stderr, "Mouse pressed.\n");
     releaseMouse();
     QWindow *window = windowHandle();
     if (window) {

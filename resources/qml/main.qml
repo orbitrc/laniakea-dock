@@ -11,6 +11,8 @@ Rectangle {
     spacing: 1
 
     Repeater {
+      id: icons
+
       model: Dock.itemIds.length
       Icon {
 //        wId: Dock.itemIds[index]
@@ -36,6 +38,12 @@ Rectangle {
       onClicked: {
         Qt.quit();
       }
+    }
+  }
+
+  Component.onCompleted: {
+    for (let i = 0; i < icons.count; ++i) {
+      icons.itemAt(i).updateIconGeometry();
     }
   }
 }

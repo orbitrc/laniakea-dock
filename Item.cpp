@@ -67,3 +67,13 @@ void Item::removeWindow(int wId)
 {
     this->m_wIds.removeOne(wId);
 }
+
+QRect Item::iconGeometry() const
+{
+    return this->m_iconGeometry;
+}
+
+void Item::setIconGeometry(const QRect &rect)
+{
+    this->m_iconGeometry = rect;
+}

@@ -100,7 +100,6 @@ Rectangle {
           Dock.activateWindow(wins[0]);
         }
       } else if (mouse.button === Qt.RightButton) {
-        Dock.debugPrint('right');
         PopUpManager.showContextMenu(root.itemId);
       }
     }
@@ -108,5 +107,10 @@ Rectangle {
 
   function isActive() {
     return root.itemId == Dock.activeWindowItemId;
+  }
+
+  function updateIconGeometry() {
+    let global = mapToGlobal(0, 0);
+    Dock.itemSetIconGeometry(root.itemId, Qt.rect(global.x, global.y, root.width, root.height));
   }
 }

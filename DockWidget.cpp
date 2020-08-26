@@ -8,7 +8,7 @@ DockWidget::DockWidget(QQmlEngine *engine, QWidget *parent)
 {
     this->set_on_all_desktop();
 
-    setGeometry(0, 60, width(), height());
+    setGeometry(0, 120, width(), height());
 }
 
 //===================

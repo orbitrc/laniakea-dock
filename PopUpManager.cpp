@@ -22,5 +22,14 @@ void PopUpManager::showContextMenu(const QString &id)
     menuWidget->setSource(QUrl("qrc:/qml/ContextMenu.qml"));
     menuWidget->rootObject()->setProperty("itemId", id);
 
+    // Set geometry.
+    Item *item = this->_dock->item_by_id(id);
+    if (item) {
+        menuWidget->setGeometry(
+            item->iconGeometry().x(), item->iconGeometry().y(),
+            menuWidget->width(), menuWidget->height()
+        );
+    }
+
     menuWidget->show();
 }

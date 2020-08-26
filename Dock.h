@@ -4,6 +4,7 @@
 #include <QObject>
 
 #include <QPixmap>
+#include <QRect>
 
 #include <X11/Xlib.h>
 
@@ -35,10 +36,17 @@ public:
 
     Q_INVOKABLE QString itemClassById(const QString& id) const;
     Q_INVOKABLE QList<int> itemWindowsById(const QString& id) const;
+    Q_INVOKABLE QRect itemIconGeometry(const QString& id) const;
+    Q_INVOKABLE void itemSetIconGeometry(const QString& id, const QRect& rect);
     Q_INVOKABLE void activateWindow(int wId);
     Q_INVOKABLE void debugPrint(const QString& str) const;
 
     QPixmap current_window_icon(const QString& id) const;
+
+    //=====================
+    // Helper methods
+    //=====================
+    Item* item_by_id(const QString& id) const;
 
     void list_clients();
 
