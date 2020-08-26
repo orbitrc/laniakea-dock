@@ -26,7 +26,7 @@ void ToolTipWidget::setTargetRect(const QRect &rect)
 
 void ToolTipWidget::mouseMoveEvent(QMouseEvent *evt)
 {
-    if (!this->m_targetRect.contains(evt->x(), evt->y())) {
+    if (!this->m_targetRect.contains(evt->globalX(), evt->globalY())) {
         close();
         deleteLater();
     }

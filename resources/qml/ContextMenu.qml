@@ -16,6 +16,7 @@ Item {
 
     Text {
       text: root.itemId
+      font.pixelSize: 16
     }
   }
 }
