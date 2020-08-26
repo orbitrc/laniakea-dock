@@ -40,10 +40,4 @@ Rectangle {
       }
     }
   }
-
-  Component.onCompleted: {
-    for (let i = 0; i < icons.count; ++i) {
-      icons.itemAt(i).updateIconGeometry();
-    }
-  }
 }
