@@ -25,8 +25,10 @@ void PopUpManager::showContextMenu(const QString &id)
     // Set geometry.
     Item *item = this->_dock->item_by_id(id);
     if (item) {
+        int offset_x = ((menuWidget->width() / 2) - (item->iconGeometry().width() / 2));
         menuWidget->setGeometry(
-            item->iconGeometry().x(), item->iconGeometry().y(),
+            item->iconGeometry().x() - offset_x,
+            item->iconGeometry().y() - menuWidget->height(),
             menuWidget->width(), menuWidget->height()
         );
     }
