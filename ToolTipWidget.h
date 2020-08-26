@@ -13,7 +13,7 @@ public:
     void setTargetRect(const QRect &rect);
 
 protected:
-    void mouseMoveEvent(QMouseEvent *) override;
+    virtual void mouseMoveEvent(QMouseEvent *) override;
 
     virtual bool event(QEvent *) override;
 
