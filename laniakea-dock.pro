@@ -21,7 +21,8 @@ HEADERS += \
     IconImageProvider.h \
     Item.h \
     MenuWidget.h \
-    PopUpManager.h
+    PopUpManager.h \
+    ToolTipWidget.h
 
 SOURCES += \
     Dock.cpp \
@@ -30,6 +31,7 @@ SOURCES += \
     Item.cpp \
     MenuWidget.cpp \
     PopUpManager.cpp \
+    ToolTipWidget.cpp \
     main.cpp
 
 RESOURCES += resources/resources.qrc

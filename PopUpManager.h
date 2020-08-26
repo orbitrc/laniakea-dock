@@ -14,6 +14,7 @@ public:
     explicit PopUpManager(QQmlEngine *engine, Dock *dock, QObject *parent = nullptr);
 
     Q_INVOKABLE void showContextMenu(const QString& id);
+    Q_INVOKABLE void showToolTip(const QString& id);
 signals:
 
 private:

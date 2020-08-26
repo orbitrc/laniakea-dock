@@ -90,6 +90,7 @@ Rectangle {
   MouseArea {
     anchors.fill: parent
 
+    hoverEnabled: true
     acceptedButtons: Qt.LeftButton | Qt.RightButton
 
     onClicked: {
@@ -102,6 +103,10 @@ Rectangle {
       } else if (mouse.button === Qt.RightButton) {
         PopUpManager.showContextMenu(root.itemId);
       }
+    }
+
+    onEntered: {
+      PopUpManager.showToolTip(root.itemId);
     }
   }
 

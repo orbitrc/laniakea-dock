@@ -3,6 +3,7 @@
 #include <QQuickItem>
 
 #include "MenuWidget.h"
+#include "ToolTipWidget.h"
 
 #include "Dock.h"
 
@@ -34,4 +35,19 @@ void PopUpManager::showContextMenu(const QString &id)
     }
 
     menuWidget->show();
+}
+
+void PopUpManager::showToolTip(const QString &id)
+{
+    ToolTipWidget *toolTipWidget = new ToolTipWidget(this->_engine);
+    toolTipWidget->setSource(QUrl("qrc:/qml/ToolTip.qml"));
+    toolTipWidget->rootObject()->setProperty("itemId", id);
+
+    // Set target rect.
+    Item *item = this->_dock->item_by_id(id);
+    if (item) {
+        toolTipWidget->setTargetRect(item->iconGeometry());
+    }
+
+    toolTipWidget->show();
 }
