@@ -51,11 +51,12 @@ void PopUpManager::showToolTip(const QString &id)
 
     // Set geometry.
     if (item) {
-        int offset_x = ((toolTipWidget->width() / 2) - (item->iconGeometry().width() / 2));
+        int tool_tip_width = toolTipWidget->rootObject()->property("width").toInt();
+        int offset_x = ((tool_tip_width / 2) - (item->iconGeometry().width() / 2));
         toolTipWidget->setGeometry(
             item->iconGeometry().x() - offset_x,
             item->iconGeometry().y() - toolTipWidget->height(),
-            toolTipWidget->width(), toolTipWidget->height()
+            tool_tip_width, toolTipWidget->height()
         );
     }
 

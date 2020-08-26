@@ -5,7 +5,7 @@ Item {
 
   property string itemId
 
-  width: 100
+  width: text.implicitWidth + 20
   height: 48 + 10
 
   Rectangle {
@@ -16,8 +16,12 @@ Item {
     color: "black"
 
     Text {
+      id: text
+
       text: Dock.itemClassById(root.itemId)
       color: "white"
+      font.pixelSize: 18
+      font.bold: true
     }
   }
 }
