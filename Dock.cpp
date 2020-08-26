@@ -34,6 +34,7 @@ Dock::~Dock()
     this->x_event_monitoring = false;
     this->thr_monitor_x->exit();
     while (this->thr_monitor_x->isRunning()) {
+        this->thr_monitor_x->wait(100);
     }
 
     XCloseDisplay(this->_dpy);

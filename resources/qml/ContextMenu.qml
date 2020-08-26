@@ -18,5 +18,4 @@ Item {
       text: root.itemId
     }
   }
-
 }
