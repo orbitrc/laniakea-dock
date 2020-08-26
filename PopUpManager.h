@@ -7,6 +7,8 @@
 
 class Dock;
 
+class ToolTipWidget;
+
 class PopUpManager : public QObject
 {
     Q_OBJECT
@@ -15,11 +17,14 @@ public:
 
     Q_INVOKABLE void showContextMenu(const QString& id);
     Q_INVOKABLE void showToolTip(const QString& id);
+    Q_INVOKABLE void hideToolTip();
 signals:
 
 private:
     QQmlEngine *_engine;
     Dock *_dock;
+
+    ToolTipWidget *_tool_tip;
 };
 
 #endif // POPUPMANAGER_H

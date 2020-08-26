@@ -108,6 +108,10 @@ Rectangle {
     onEntered: {
       PopUpManager.showToolTip(root.itemId);
     }
+
+    onExited: {
+      PopUpManager.hideToolTip();
+    }
   }
 
   function isActive() {

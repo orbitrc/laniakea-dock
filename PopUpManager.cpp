@@ -12,6 +12,8 @@ PopUpManager::PopUpManager(QQmlEngine *engine, Dock *dock, QObject *parent)
 {
     this->_engine = engine;
     this->_dock = dock;
+
+    this->_tool_tip = nullptr;
 }
 
 //=========================
@@ -60,5 +62,15 @@ void PopUpManager::showToolTip(const QString &id)
         );
     }
 
+    this->_tool_tip = toolTipWidget;
+
     toolTipWidget->show();
+}
+
+void PopUpManager::hideToolTip()
+{
+    if (this->_tool_tip) {
+        this->_tool_tip->close();
+        this->_tool_tip->deleteLater();
+    }
 }

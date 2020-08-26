@@ -27,8 +27,8 @@ void ToolTipWidget::setTargetRect(const QRect &rect)
 void ToolTipWidget::mouseMoveEvent(QMouseEvent *evt)
 {
     if (!this->m_targetRect.contains(evt->globalX(), evt->globalY())) {
-        close();
-        deleteLater();
+//        close();
+//        deleteLater();
     }
 }
 
@@ -37,7 +37,7 @@ bool ToolTipWidget::event(QEvent *evt)
     if (evt->type() == QEvent::Paint) {
         QWindow *window = windowHandle();
         if (window) {
-            window->setMouseGrabEnabled(true);
+//            window->setMouseGrabEnabled(true);
         }
     }
 
