@@ -63,6 +63,9 @@ void PopUpManager::showToolTip(const QString &id)
     }
 
     this->_tool_tip = toolTipWidget;
+    QObject::connect(this->_tool_tip, &ToolTipWidget::closed, this, [this]() {
+        this->_tool_tip = nullptr;
+    });
 
     toolTipWidget->show();
 }

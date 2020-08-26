@@ -15,6 +15,11 @@ ToolTipWidget::ToolTipWidget(QQmlEngine *engine, QWidget *parent)
     setClearColor(Qt::transparent);
 }
 
+ToolTipWidget::~ToolTipWidget()
+{
+//    fprintf(stderr, "ToolTipWidget destroy\n");
+}
+
 void ToolTipWidget::setTargetRect(const QRect &rect)
 {
     this->m_targetRect = rect;
@@ -23,6 +28,14 @@ void ToolTipWidget::setTargetRect(const QRect &rect)
 //=======================
 // Event handlers
 //=======================
+
+void ToolTipWidget::closeEvent(QCloseEvent *evt)
+{
+    deleteLater();
+    emit this->closed();
+
+    QQuickWidget::closeEvent(evt);
+}
 
 void ToolTipWidget::mouseMoveEvent(QMouseEvent *evt)
 {
