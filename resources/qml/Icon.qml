@@ -19,14 +19,6 @@ Rectangle {
     font.pixelSize: 10
     wrapMode: Text.WrapAnywhere
   }
-  Text {
-    id: debugMessage
-
-    anchors.bottom: parent.bottom
-
-    text: ''
-    font.pixelSize: 9
-  }
 
   Item {
     id: innerShadowSource
@@ -103,12 +95,12 @@ Rectangle {
     onClicked: {
       if (mouse.button === Qt.LeftButton) {
         let wins = Dock.itemWindowsById(root.itemId);
-        debugMessage.text = wins.length;
+        Dock.debugPrint(wins.length);
         if (wins.length === 1) {
           Dock.activateWindow(wins[0]);
         }
       } else if (mouse.button === Qt.RightButton) {
-        debugMessage.text = 'right';
+        Dock.debugPrint('right');
         PopUpManager.showContextMenu(root.itemId);
       }
     }
