@@ -12,6 +12,8 @@
 
 class QThread;
 
+class ConfigFile;
+
 class Dock : public QObject
 {
     Q_OBJECT
@@ -94,6 +96,8 @@ private:
     QList<int> m_windows;
     QList<Item*> m_items;
     int m_activeWindow;
+
+    ConfigFile *_config;
 
     Display *_dpy;
 

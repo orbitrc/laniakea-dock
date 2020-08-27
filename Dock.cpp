@@ -8,6 +8,8 @@
 
 #include <X11/Xatom.h>
 
+#include "ConfigFile.h"
+
 Dock::Dock(QObject *parent)
     : QObject(parent)
 {
@@ -19,6 +21,10 @@ Dock::Dock(QObject *parent)
     QObject::connect(this, &Dock::windowAdded, this, &Dock::onWindowAdded);
     QObject::connect(this, &Dock::windowRemoved, this, &Dock::onWindowRemoved);
 
+    // Config file.
+    this->_config = new ConfigFile();
+
+    // Initail properties.
     this->list_clients();
     this->update_active_window();
 
@@ -31,6 +37,10 @@ Dock::Dock(QObject *parent)
 
 Dock::~Dock()
 {
+    // Delete config file.
+    delete this->_config;
+
+    // Stop workers.
     this->x_event_monitoring = false;
     this->thr_monitor_x->exit();
     while (this->thr_monitor_x->isRunning()) {
