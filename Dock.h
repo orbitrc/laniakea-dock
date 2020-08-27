@@ -35,6 +35,7 @@ public:
     QString activeWindowItemId() const;
 
     void appendItem(Item::ItemType type, QString cls, bool pinned = false);
+    void appendItem(Item *item);
 
     Q_INVOKABLE QString itemClassById(const QString& id) const;
     Q_INVOKABLE QList<int> itemWindowsById(const QString& id) const;
@@ -75,6 +76,8 @@ private:
     //======================
     Item* find_item_by_class(const QString& cls);
     Item* find_item_by_w_id(unsigned long w_id);
+
+    void list_pinned_items();
 
 signals:
     void windowsChanged();

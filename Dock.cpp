@@ -23,6 +23,8 @@ Dock::Dock(QObject *parent)
 
     // Config file.
     this->_config = new ConfigFile();
+    this->_config->load();
+    this->list_pinned_items();
 
     // Initail properties.
     this->list_clients();
@@ -88,6 +90,13 @@ void Dock::appendItem(Item::ItemType type, QString cls, bool pinned)
     item->setCls(cls);
     item->setPinned(pinned);
 
+    this->m_items.append(item);
+
+    emit this->itemAdded();
+}
+
+void Dock::appendItem(Item *item)
+{
     this->m_items.append(item);
 
     emit this->itemAdded();
@@ -206,6 +215,21 @@ Item* Dock::item_by_id(const QString& id) const
     }
 
     return item;
+}
+
+void Dock::list_pinned_items()
+{
+    auto sections = this->_config->sections();
+    for (auto&& section: sections) {
+        fprintf(stderr, "section: %s\n", section.toStdString().c_str());
+        Item *item = new Item();
+        item->setPinned(true);
+        auto type = this->_config->get_string(section, "Type");
+        if (type.has_value() && type.value() == "DesktopEntry") {
+            item->setType(Item::ItemType::DesktopEntry);
+        }
+        this->appendItem(item);
+    }
 }
 
 

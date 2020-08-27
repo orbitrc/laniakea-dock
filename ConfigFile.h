@@ -14,6 +14,8 @@ public:
 
     void load();
 
+    QList<QString> sections() const;
+
     std::optional<QString> get_string(const QString& section, const QString& key) const;
 
 private:

@@ -57,6 +57,11 @@ void ConfigFile::load()
     f.close();
 }
 
+QList<QString> ConfigFile::sections() const
+{
+    return this->_config.keys();
+}
+
 //=========================
 // Get property
 //=========================
