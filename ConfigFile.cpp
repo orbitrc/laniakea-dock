@@ -29,8 +29,13 @@ ConfigFile::ConfigFile()
 
 void ConfigFile::load()
 {
-    QFile f(LA_DOCK_CONFIG_PATH);
-    f.open(QIODevice::ReadOnly, QIODevice::Text);
+    auto config_path = fs::path(getenv("HOME"));
+    config_path /= LA_DOCK_CONFIG_PATH;
+    QFile f(config_path.c_str());
+    if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        fprintf(stderr, "FILE ERROR: %s\n", f.errorString().toStdString().c_str());
+    }
+
     QByteArray section = "";
     while (!f.atEnd()) {
         QByteArray line = f.readLine();
