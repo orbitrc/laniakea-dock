@@ -416,16 +416,18 @@ QPixmap Dock::get_window_icon(unsigned long w_id, unsigned long req_size) const
     // Get available icon sizes.
     QList<unsigned long> sizes;
     unsigned long *end = icon + size;
+    fprintf(stderr, "sizes: ");
     while (icon != end) {
         unsigned long width = *icon++;
         unsigned long height = *icon++;
-        fprintf(stderr, "size: %ldx%ld\n", width, height);
+        fprintf(stderr, "%ldx%ld ", width, height);
         sizes.append(width);
         if (width >= 1024) {
             break;
         }
         icon += width * height;
     }
+    fprintf(stderr, "\n");
     std::sort(sizes.begin(), sizes.end());
     // Get ideal icon size.
     unsigned long ideal_size = 0;
