@@ -103,6 +103,19 @@ pub extern "C" fn desktopentry_desktop_parse(path: *const c_char) -> *mut deskto
 }
 
 #[no_mangle]
+pub extern "C" fn desktopentry_desktop_entry_name(desktop: *const desktopentry_desktop) -> *const c_char {
+    let box_desktop = unsafe {
+        Box::from_raw(desktop as *mut desktopentry_desktop)
+    };
+
+    let entry_name = (*box_desktop).entry.name;
+
+    Box::into_raw(box_desktop);
+
+    entry_name
+}
+
+#[no_mangle]
 pub extern "C" fn desktopentry_desktop_free(desktop: *mut desktopentry_desktop) {
     let box_desktop = unsafe {
         Box::from_raw(desktop)
