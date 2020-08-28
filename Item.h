@@ -41,6 +41,10 @@ public:
     void setIconGeometry(const QRect& rect);
 
 signals:
+    void iconGeometryChanged(const QRect& rect);
+
+public slots:
+    void changeNetWmIconGeometry(const QRect& rect);
 
 private:
     QString m_id;

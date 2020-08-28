@@ -1,11 +1,18 @@
 #include "Item.h"
 
+#include <stdint.h>
+
 #include <QUuid>
+
+#include <xcb/xcb.h>
 
 Item::Item(QObject *parent)
     : QObject(parent)
 {
     this->setId(QUuid::createUuid().toString(QUuid::StringFormat::WithoutBraces));
+
+    QObject::connect(this, &Item::iconGeometryChanged,
+                     this, &Item::changeNetWmIconGeometry);
 }
 
 QString Item::id() const
@@ -75,5 +82,67 @@ QRect Item::iconGeometry() const
 
 void Item::setIconGeometry(const QRect &rect)
 {
-    this->m_iconGeometry = rect;
+    if (this->m_iconGeometry != rect) {
+        this->m_iconGeometry = rect;
+
+        emit this->iconGeometryChanged(rect);
+    }
+}
+
+//=========================
+// Slots
+//=========================
+void Item::changeNetWmIconGeometry(const QRect& rect)
+{
+    uint32_t x = rect.x();
+    uint32_t y = rect.y();
+    uint32_t width = rect.width();
+    uint32_t height = rect.height();
+
+    // Connect to the X server.
+    xcb_connection_t *conn;
+    const xcb_setup_t *setup;
+    xcb_screen_iterator_t iter;
+    xcb_screen_t *screen;
+
+    conn = xcb_connect(NULL, NULL);
+    setup = xcb_get_setup(conn);
+    iter = xcb_setup_roots_iterator(setup);
+    screen = iter.data;
+
+    // Get atom.
+    xcb_atom_t net_wm_icon_geometry;
+    xcb_intern_atom_cookie_t intern_atom_cookie;
+    xcb_intern_atom_reply_t *intern_atom_reply;
+    intern_atom_cookie = xcb_intern_atom(
+        conn, 1, strlen("_NET_WM_ICON_GEOMETRY"), "_NET_WM_ICON_GEOMETRY");
+    intern_atom_reply = xcb_intern_atom_reply(conn, intern_atom_cookie, NULL);
+    net_wm_icon_geometry = intern_atom_reply->atom;
+    free(intern_atom_reply);
+
+    uint32_t data[4];
+    data[0] = x;
+    data[1] = y;
+    data[2] = width;
+    data[3] = height;
+
+    for (int i = 0; i < this->windows().length(); ++i) {
+        xcb_void_cookie_t cookie = xcb_change_property_checked(
+            conn,
+            XCB_PROP_MODE_REPLACE,
+            this->windows()[i],
+            net_wm_icon_geometry,
+            XCB_ATOM_CARDINAL,
+            32,
+            4,
+            (void*)data
+        );
+        xcb_flush(conn);
+
+        xcb_generic_error_t *err = xcb_request_check(conn, cookie);
+        if (err) {}
+    }
+
+    // Close connection from the X server.
+    xcb_disconnect(conn);
 }
