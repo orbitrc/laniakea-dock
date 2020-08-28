@@ -45,7 +45,6 @@ Rectangle {
     target: Dock
 
     onWidgetGeometryChanged: {
-      Dock.debugPrint('will update ' + icons.count + ' items');
       for (let i = 0; i < icons.count; ++i) {
         icons.itemAt(i).updateIconGeometry();
       }
