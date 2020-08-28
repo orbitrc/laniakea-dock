@@ -12,6 +12,19 @@ DockWidget::DockWidget(QQmlEngine *engine, QWidget *parent)
 }
 
 //===================
+// Event handlers
+//===================
+
+bool DockWidget::event(QEvent *evt)
+{
+    if (evt->type() == QEvent::Paint) {
+        emit this->geometryChanged();
+    }
+
+    return QQuickWidget::event(evt);
+}
+
+//===================
 // Private methods
 //===================
 void DockWidget::set_on_all_desktop()

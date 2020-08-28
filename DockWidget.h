@@ -7,11 +7,18 @@
 
 class DockWidget : public QQuickWidget
 {
+    Q_OBJECT
 public:
     DockWidget(QQmlEngine *engine, QWidget *parent);
 
+protected:
+    virtual bool event(QEvent *) override;
+
 private:
     void set_on_all_desktop();
+
+signals:
+    void geometryChanged();
 };
 
 #endif // DOCKWIDGET_H

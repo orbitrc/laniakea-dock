@@ -89,6 +89,8 @@ signals:
     void activeWindowChanged();
     void activeWindowItemIdChanged();
 
+    void widgetGeometryChanged();
+
 public slots:
     void onItemAdded();
     void onActiveWindowChanged();

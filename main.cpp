@@ -38,6 +38,8 @@ int main(int argc, char *argv[])
 
     // Dock widget.
     DockWidget widget(&engine, nullptr);
+    QObject::connect(&widget, &DockWidget::geometryChanged,
+                     &dock, &Dock::widgetGeometryChanged);
     widget.setAttribute(Qt::WA_X11NetWmWindowTypeDock);
     widget.setSource(url);
 

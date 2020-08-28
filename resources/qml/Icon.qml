@@ -122,8 +122,4 @@ Rectangle {
     let global = mapToGlobal(0, 0);
     Dock.itemSetIconGeometry(root.itemId, Qt.rect(global.x, global.y, root.width, root.height));
   }
-
-  onXChanged: {
-    root.updateIconGeometry();
-  }
 }
