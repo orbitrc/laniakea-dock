@@ -2,6 +2,7 @@
 #define _DESKTOPENTRY_H
 
 #include <stdint.h>
+#include <stddef.h>
 
 /**
  * An entry section.
@@ -11,6 +12,8 @@ typedef struct desktopentry_entry {
     uint64_t n_locale_names;
     void *locale_names;
     char *exec;
+    char *icon_name;
+    void *icons;
 } desktopentry_entry;
 
 /**
@@ -27,6 +30,16 @@ typedef struct desktopentry_desktop {
 } desktopentry_desktop;
 
 
+/*========================*/
+/* desktopentry functions */
+/*========================*/
+
+/**
+ * Free the string that allocated by Rust.
+ */
+void desktopentry_free_string(char *str);
+
+
 /*========================================*/
 /* desktopentry_desktop functions/methods */
 /*========================================*/
@@ -41,6 +54,12 @@ desktopentry_desktop* desktopentry_desktop_parse(const char *path);
  * Get the desktop entry name.
  */
 const char* desktopentry_desktop_entry_name(const desktopentry_desktop *desktop);
+
+/**
+ * Get the proper sized icon path.
+ */
+char* desktopentry_desktop_get_proper_icon(const desktopentry_desktop *desktop,
+        size_t size);
 
 /**
  * Free the memory of desktopentry_desktop object.
