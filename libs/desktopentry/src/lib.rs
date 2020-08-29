@@ -269,9 +269,7 @@ fn get_icons(icon_name: &str) -> Vec<String> {
                         }
                     }
                 }
-                Err(e) => {
-                    eprintln!("{:?}", e);
-                }
+                Err(_) => {}
             }
         }
     }

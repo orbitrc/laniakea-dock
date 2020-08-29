@@ -13,6 +13,7 @@
 class QThread;
 
 class ConfigFile;
+class DesktopEntry;
 
 class Dock : public QObject
 {
@@ -104,6 +105,7 @@ private:
     int m_activeWindow;
 
     ConfigFile *_config;
+    DesktopEntry *_desktop_entry;
 
     Display *_dpy;
 
