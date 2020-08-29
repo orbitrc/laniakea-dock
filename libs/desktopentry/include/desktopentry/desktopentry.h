@@ -4,6 +4,10 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * An entry section.
  */
@@ -66,5 +70,9 @@ char* desktopentry_desktop_get_proper_icon(const desktopentry_desktop *desktop,
  * \param desktop Object want to free.
  */
 void desktopentry_desktop_free(desktopentry_desktop *desktop);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _DESKTOPENTRY_H */
