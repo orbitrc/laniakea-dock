@@ -13,13 +13,13 @@
 class DesktopEntry
 {
 public:
-    DesktopEntry(const char *path);
+    DesktopEntry();
     ~DesktopEntry();
 
-    void init(const char *path);
+    void init();
 
-    QString entryName() const;
-    QString iconPath(size_t width, size_t height) const;
+    QString entryName(const QString& filename) const;
+    QString iconPath(const QString& filename, size_t width, size_t height) const;
 
 private:
     //======================
@@ -28,7 +28,6 @@ private:
     static bool ends_with(const char *str, const char *cmp);
 
 private:
-    desktopentry_desktop *_desktop;
     /// <File name, desktopentry_desktop*> key=value pairs.
     QMap<QString, desktopentry_desktop*> _desktops;
 };

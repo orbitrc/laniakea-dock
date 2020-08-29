@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <algorithm>
+#include <filesystem>
 
 #include <QPainter>
 #include <QThread>
@@ -25,6 +26,9 @@ Dock::Dock(QObject *parent)
     this->_config = new ConfigFile();
     this->_config->load();
     this->list_pinned_items();
+
+    // Desktop entries.
+    this->_desktop_entry = new DesktopEntry();
 
     // Initail properties.
     this->list_clients();
@@ -143,14 +147,21 @@ QPixmap Dock::current_window_icon(const QString &id) const
 
 QPixmap Dock::item_default_icon(const QString &id) const
 {
+    namespace fs = std::filesystem;
+
     Item *item = this->item_by_id(id);
 
     if (item) {
-        auto path = item->defaultIconPath();
-        fprintf(stderr, "Dock::item_default_icon - path: %s\n", path.toStdString().c_str());
-        if (path != "") {
+        fs::path desktop_path = item->path().toStdString();
+        if (desktop_path != "") {
+            auto desktop_filename = desktop_path.filename();
+            auto icon_path = this->_desktop_entry->iconPath(
+                desktop_filename.c_str(),
+                48, // width
+                48  // height
+            );
             QPixmap icon_pixmap;
-            icon_pixmap.load(path);
+            icon_pixmap.load(icon_path);
 
             return icon_pixmap;
         }

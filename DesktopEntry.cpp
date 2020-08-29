@@ -3,26 +3,22 @@
 #include <string.h>
 #include <filesystem>
 
-DesktopEntry::DesktopEntry(const char *path)
+DesktopEntry::DesktopEntry()
 {
-    this->init(path);
+    this->init();
 }
 
 DesktopEntry::~DesktopEntry()
 {
-    desktopentry_desktop_free(this->_desktop);
-
     // Free desktopentry_desktop structs.
     for (auto& desktop: this->_desktops) {
         desktopentry_desktop_free(desktop);
     }
 }
 
-void DesktopEntry::init(const char *path)
+void DesktopEntry::init()
 {
     namespace fs = std::filesystem;
-
-    this->_desktop = desktopentry_desktop_parse(path);
 
     // Collect .desktop files in applications directory.
     auto dir_iter = fs::directory_iterator(LA_DOCK_APPLICATIONS_PATH);
@@ -35,20 +31,27 @@ void DesktopEntry::init(const char *path)
     }
 }
 
-QString DesktopEntry::entryName() const
+QString DesktopEntry::entryName(const QString& filename) const
 {
-    const char *name = desktopentry_desktop_entry_name(this->_desktop);
+    desktopentry_desktop *desktop = this->_desktops.value(filename, nullptr);
+    if (desktop != nullptr) {
+        const char *name = desktopentry_desktop_entry_name(desktop);
 
-    return QString(name);
+        return QString(name);
+    }
+
+    fprintf(stderr, "DesktopEntry::entryName - desktop is nullptr");
+    return QString();
 }
 
-QString DesktopEntry::iconPath(size_t width, size_t height) const
+QString DesktopEntry::iconPath(const QString& filename, size_t width, size_t height) const
 {
     size_t size = width;
     (void)height;
 
-    if (this->_desktop != nullptr) {
-        char *path = desktopentry_desktop_get_proper_icon(this->_desktop, size);
+    desktopentry_desktop *desktop = this->_desktops.value(filename, nullptr);
+    if (desktop != nullptr) {
+        char *path = desktopentry_desktop_get_proper_icon(desktop, size);
         fprintf(stderr, "DesktopEntry::iconPath - path: %s\n", path);
         if (path != NULL) {
             auto icon_path = QString(path);

@@ -46,12 +46,6 @@ public:
     QRect iconGeometry() const;
     void setIconGeometry(const QRect& rect);
 
-    /// @brief Default icon path regardless current window status.
-    ///
-    /// @return Default icon path. If no icon for this item, then returns empty
-    ///         string.
-    QString defaultIconPath() const;
-
 signals:
     void iconGeometryChanged(const QRect& rect);
 
@@ -67,7 +61,6 @@ private:
     QList<int> m_wIds;
     QRect m_iconGeometry;
 
-    DesktopEntry *_desktop_entry;
     void *_appimage;
     void *_exec;
 };
