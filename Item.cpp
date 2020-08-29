@@ -149,14 +149,8 @@ void Item::changeNetWmIconGeometry(const QRect& rect)
 
     // Connect to the X server.
     xcb_connection_t *conn;
-    const xcb_setup_t *setup;
-    xcb_screen_iterator_t iter;
-    xcb_screen_t *screen;
 
     conn = xcb_connect(NULL, NULL);
-    setup = xcb_get_setup(conn);
-    iter = xcb_setup_roots_iterator(setup);
-    screen = iter.data;
 
     // Get atom.
     xcb_atom_t net_wm_icon_geometry;
