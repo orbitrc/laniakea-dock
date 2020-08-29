@@ -49,14 +49,14 @@ void ConfigFile::load()
         }
         // Section.
         if (line.trimmed().startsWith("[")) {
-            section = line.replace("[", "").replace("]", "");
+            section = line.trimmed().replace("[", "").replace("]", "");
             this->_config[section] = QMap<QString, QString>();
             continue;
         }
         // Key-value pair.
         if (line.contains("=")) {
             auto kv = line.trimmed().split('=');
-            this->_config[section][kv[0]] = kv[1];
+            this->_config[section][kv[0].trimmed()] = kv[1].trimmed();
         }
     }
     f.close();

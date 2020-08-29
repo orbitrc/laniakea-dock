@@ -45,6 +45,7 @@ public:
     Q_INVOKABLE void debugPrint(const QString& str) const;
 
     QPixmap current_window_icon(const QString& id) const;
+    QPixmap item_default_icon(const QString& id) const;
 
     //=====================
     // Helper methods

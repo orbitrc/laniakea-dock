@@ -7,6 +7,8 @@
 
 #include <QRect>
 
+#include "DesktopEntry.h"
+
 class Item : public QObject
 {
     Q_OBJECT
@@ -18,7 +20,8 @@ public:
     };
 
 public:
-    explicit Item(QObject *parent = nullptr);
+    explicit Item(ItemType type, const QString& path = "", QObject *parent = nullptr);
+    ~Item();
 
     QString id() const;
     void setId(const QString& id);
@@ -40,6 +43,12 @@ public:
     QRect iconGeometry() const;
     void setIconGeometry(const QRect& rect);
 
+    /// @brief Default icon path regardless current window status.
+    ///
+    /// @return Default icon path. If no icon for this item, then returns empty
+    ///         string.
+    QString defaultIconPath() const;
+
 signals:
     void iconGeometryChanged(const QRect& rect);
 
@@ -53,6 +62,10 @@ private:
     std::optional<QString> m_class;
     QList<int> m_wIds;
     QRect m_iconGeometry;
+
+    DesktopEntry *_desktop_entry;
+    void *_appimage;
+    void *_exec;
 };
 
 #endif // ITEM_H

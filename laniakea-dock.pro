@@ -2,7 +2,15 @@ QT += core quick quickwidgets
 
 CONFIG += c++17
 
+INCLUDEPATH += libs/desktopentry/include
+
 LIBS += -lX11 -lxcb
+CONFIG(debug, debug|release) {
+    LIBS += -L$$PWD/libs/desktopentry/target/debug
+} else {
+    LIBS += -L$$PWD/libs/desktopentry/target/release
+}
+LIBS += -ldesktopentry
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -17,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 HEADERS += \
     ConfigFile.h \
+    DesktopEntry.h \
     Dock.h \
     DockWidget.h \
     IconImageProvider.h \
@@ -27,6 +36,7 @@ HEADERS += \
 
 SOURCES += \
     ConfigFile.cpp \
+    DesktopEntry.cpp \
     Dock.cpp \
     DockWidget.cpp \
     IconImageProvider.cpp \

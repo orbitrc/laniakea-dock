@@ -21,6 +21,12 @@ QPixmap IconImageProvider::requestPixmap(const QString& id, QSize *size, const Q
         requestedSize.height() > 0 ? requestedSize.height() : height
     );
 
+    // If no windows for item.
+    Item *item = this->_dock->item_by_id(id);
+    if (item && item->windows().length() == 0) {
+        return this->_dock->item_default_icon(id);
+    }
+
     QPixmap p = this->_dock->current_window_icon(id);
 
     return p;

@@ -85,8 +85,7 @@ QList<QString> Dock::itemIds() const
 
 void Dock::appendItem(Item::ItemType type, QString cls, bool pinned)
 {
-    Item *item = new Item;
-    item->setType(type);
+    Item *item = new Item(type);
     item->setCls(cls);
     item->setPinned(pinned);
 
@@ -140,6 +139,26 @@ QPixmap Dock::current_window_icon(const QString &id) const
     QPixmap default_pixmap(1, 1);
     default_pixmap.fill(QColor(0, 255, 0, 100));
     return default_pixmap;
+}
+
+QPixmap Dock::item_default_icon(const QString &id) const
+{
+    Item *item = this->item_by_id(id);
+
+    if (item) {
+        auto path = item->defaultIconPath();
+        fprintf(stderr, "Dock::item_default_icon - path: %s\n", path.toStdString().c_str());
+        if (path != "") {
+            QPixmap icon_pixmap;
+            icon_pixmap.load(path);
+
+            return icon_pixmap;
+        }
+    }
+
+    QPixmap null_pixmap(1, 1);
+    null_pixmap.fill(QColor(255, 0, 0, 100));
+    return null_pixmap;
 }
 
 //=========================
@@ -222,12 +241,25 @@ void Dock::list_pinned_items()
     auto sections = this->_config->sections();
     for (auto&& section: sections) {
         fprintf(stderr, "section: %s\n", section.toStdString().c_str());
-        Item *item = new Item();
-        item->setPinned(true);
+        // Get type.
+        Item::ItemType item_type;
         auto type = this->_config->get_string(section, "Type");
         if (type.has_value() && type.value() == "DesktopEntry") {
-            item->setType(Item::ItemType::DesktopEntry);
+            item_type = Item::ItemType::DesktopEntry;
+        } else if (type.has_value() && type.value() == "AppImage") {
+            item_type = Item::ItemType::AppImage;
+        } else {
+            item_type = Item::ItemType::Exec;
         }
+        // Get path.
+        auto opt_path = this->_config->get_string(section, "Path");
+        QString path = "";
+        if (opt_path.has_value()) {
+            path = opt_path.value();
+        }
+
+        Item *item = new Item(item_type, path);
+        item->setPinned(true);
         this->appendItem(item);
     }
 }

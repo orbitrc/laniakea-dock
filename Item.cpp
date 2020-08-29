@@ -6,13 +6,48 @@
 
 #include <xcb/xcb.h>
 
-Item::Item(QObject *parent)
+Item::Item(ItemType type, const QString& path, QObject *parent)
     : QObject(parent)
 {
     this->setId(QUuid::createUuid().toString(QUuid::StringFormat::WithoutBraces));
 
+    this->setType(type);
+
     QObject::connect(this, &Item::iconGeometryChanged,
                      this, &Item::changeNetWmIconGeometry);
+
+    // Initialize to null the objects.
+    this->_desktop_entry = nullptr;
+    this->_appimage = nullptr;
+    this->_exec = nullptr;
+
+    if (type == Item::ItemType::DesktopEntry) {
+        this->_desktop_entry = new DesktopEntry(path.toStdString().c_str());
+    } else if (type == Item::ItemType::AppImage) {
+    } else if (type == Item::ItemType::Exec) {
+    }
+}
+
+Item::~Item()
+{
+    // Free heap memory allocation.
+    switch (this->type()) {
+    case Item::ItemType::DesktopEntry:
+        if (this->_desktop_entry != nullptr) {
+            delete this->_desktop_entry;
+        }
+        break;
+    case Item::ItemType::AppImage:
+        if (this->_appimage != nullptr) {
+        }
+        break;
+    case Item::ItemType::Exec:
+        if (this->_exec != nullptr) {
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 QString Item::id() const
@@ -87,6 +122,19 @@ void Item::setIconGeometry(const QRect &rect)
 
         emit this->iconGeometryChanged(rect);
     }
+}
+
+QString Item::defaultIconPath() const
+{
+    if (this->type() == ItemType::DesktopEntry && this->_desktop_entry != nullptr) {
+        return this->_desktop_entry->iconPath(48, 48);
+    } else if (this->type() == ItemType::AppImage && this->_appimage != nullptr) {
+        return QString();
+    } else if (this->type() == ItemType::Exec && this->_exec != nullptr) {
+        return QString();
+    }
+
+    return QString();
 }
 
 //=========================
