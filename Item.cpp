@@ -12,6 +12,7 @@ Item::Item(ItemType type, const QString& path, QObject *parent)
     this->setId(QUuid::createUuid().toString(QUuid::StringFormat::WithoutBraces));
 
     this->setType(type);
+    this->setPath(path);
 
     QObject::connect(this, &Item::iconGeometryChanged,
                      this, &Item::changeNetWmIconGeometry);
@@ -93,6 +94,18 @@ void Item::setCls(const QString &cls)
 void Item::clearCls()
 {
     this->m_class.reset();
+}
+
+QString Item::path() const
+{
+    return this->m_path;
+}
+
+void Item::setPath(const QString &path)
+{
+    if (this->m_path != path) {
+        this->m_path = path;
+    }
 }
 
 QList<int> Item::windows() const

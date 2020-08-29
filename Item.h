@@ -36,6 +36,9 @@ public:
     void setCls(const QString& cls);
     void clearCls();
 
+    QString path() const;
+    void setPath(const QString& path);
+
     QList<int> windows() const;
     void appendWindow(int wId);
     void removeWindow(int wId);
@@ -60,6 +63,7 @@ private:
     bool m_pinned;
     ItemType m_type;
     std::optional<QString> m_class;
+    QString m_path;
     QList<int> m_wIds;
     QRect m_iconGeometry;
 
