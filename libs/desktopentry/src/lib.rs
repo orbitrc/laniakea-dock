@@ -122,6 +122,13 @@ pub extern "C" fn desktopentry_desktop_parse(path: *const c_char) -> *mut deskto
             let icon = CString::new(icon.as_bytes()).unwrap();
             (*box_de).entry.icon_name = icon.into_raw();
         }
+        // Desktop entry - Exec.
+        if part == ParsingPart::Entry && line.trim().starts_with("Exec=") {
+            let spl: Vec<&str> = line.trim().splitn(2, '=').collect();
+            let exec = spl[1];
+            let exec = CString::new(exec.as_bytes()).unwrap();
+            (*box_de).entry.exec = exec.into_raw();
+        }
     }
 
     // Icons.
@@ -148,6 +155,20 @@ pub extern "C" fn desktopentry_desktop_entry_name(desktop: *const desktopentry_d
     Box::into_raw(box_desktop);
 
     entry_name
+}
+
+#[no_mangle]
+pub extern "C" fn desktopentry_desktop_entry_exec(desktop: *const desktopentry_desktop) -> *const c_char {
+    let box_de = unsafe {
+        Box::from_raw(desktop as *mut desktopentry_desktop)
+    };
+
+    let entry_exec = (*box_de).entry.exec;
+
+    // Put back the pointer.
+    Box::into_raw(box_de);
+
+    entry_exec
 }
 
 #[no_mangle]
