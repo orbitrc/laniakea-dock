@@ -32,7 +32,7 @@ QString DesktopEntry::iconPath(size_t width, size_t height) const
         fprintf(stderr, "DesktopEntry::iconPath - path: %s\n", path);
         if (path != NULL) {
             auto icon_path = QString(path);
-            desktopentry_free_string(path);
+            desktopentry_string_free(path);
 
             return icon_path;
         }

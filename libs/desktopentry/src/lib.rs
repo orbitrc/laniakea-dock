@@ -37,7 +37,7 @@ enum ParsingPart {
 }
 
 #[no_mangle]
-pub extern "C" fn desktopentry_free_string(c_str: *mut c_char) {
+pub extern "C" fn desktopentry_string_free(c_str: *mut c_char) {
     if !c_str.is_null() {
         unsafe {
             Box::from_raw(c_str);

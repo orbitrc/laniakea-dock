@@ -41,7 +41,7 @@ typedef struct desktopentry_desktop {
 /**
  * Free the string that allocated by Rust.
  */
-void desktopentry_free_string(char *str);
+void desktopentry_string_free(char *str);
 
 
 /*========================================*/

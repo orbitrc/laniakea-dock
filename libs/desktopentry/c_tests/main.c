@@ -15,14 +15,14 @@ int main()
     if (proper_icon) {
         printf("Icon: %s\n", proper_icon);
     }
-    desktopentry_free_string(proper_icon);
+    desktopentry_string_free(proper_icon);
 
     // scalable
     char *scalable_icon = desktopentry_desktop_get_proper_icon(desktop, 600);
     if (proper_icon) {
         printf("Icon: %s\n", scalable_icon);
     }
-    desktopentry_free_string(scalable_icon);
+    desktopentry_string_free(scalable_icon);
 
     desktopentry_desktop_free(desktop);
 
