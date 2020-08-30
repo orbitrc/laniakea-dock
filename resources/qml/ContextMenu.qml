@@ -5,8 +5,8 @@ Item {
 
   property string itemId
 
-  width: 100
-  height: 100
+  width: 160
+  height: 200
 
   Rectangle {
     anchors.fill: parent

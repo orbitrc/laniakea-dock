@@ -41,6 +41,10 @@ public:
     Q_INVOKABLE QString itemClassById(const QString& id) const;
     Q_INVOKABLE QList<int> itemWindowsById(const QString& id) const;
     Q_INVOKABLE QRect itemIconGeometry(const QString& id) const;
+    /// @brief Set the item's icon geometry.
+    ///
+    /// @param id The item's id.
+    /// @param rect Rectangle geometry will be changed.
     Q_INVOKABLE void itemSetIconGeometry(const QString& id, const QRect& rect);
     /// @brief Get proper icon name. Depends on system locale or item type.
     ///
