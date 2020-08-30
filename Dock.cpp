@@ -550,6 +550,7 @@ QString Dock::find_exec_path_by_w_id(unsigned long w_id)
     auto pid = *(unsigned long*)ret;
     auto proc_exe = QString("/proc/%1/exe").arg(pid);
     auto symlink_target = fs::read_symlink(proc_exe.toStdString());
+    fprintf(stderr, "Dock::find_exec_path_by_w_id - symlink_target: %s\n", symlink_target.c_str());
 
     return QString(symlink_target.c_str());
 }
@@ -653,7 +654,8 @@ void Dock::onWindowAdded(unsigned long wId)
     if (item == nullptr) {
         auto exec_path = this->find_exec_path_by_w_id(wId);
         auto filename = this->_desktop_entry->findFilenameByEntryExec(exec_path);
-        fprintf(stderr, "exec_path: %s\n", exec_path.toStdString().c_str());
+        auto path = this->_desktop_entry->path(filename);
+        fprintf(stderr, "path for %s: %s\n", filename.toStdString().c_str(), path.toStdString().c_str());
         this->appendItem(Item::ItemType::DesktopEntry, wm_class);
         item = this->find_item_by_class(wm_class);
     }

@@ -18,6 +18,7 @@ public:
 
     void init();
 
+    QString path(const QString& filename) const;
     QString entryName(const QString& filename) const;
     QString entryExec(const QString& filename) const;
     QString iconPath(const QString& filename, size_t width, size_t height) const;

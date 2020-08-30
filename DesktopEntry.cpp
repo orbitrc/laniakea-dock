@@ -31,6 +31,18 @@ void DesktopEntry::init()
     }
 }
 
+QString DesktopEntry::path(const QString& filename) const
+{
+    desktopentry_desktop *desktop = this->_desktops.value(filename, nullptr);
+    if (desktop != nullptr) {
+        const char *path = desktopentry_desktop_path(desktop);
+
+        return QString(path);
+    }
+
+    return QString();
+}
+
 QString DesktopEntry::entryName(const QString& filename) const
 {
     desktopentry_desktop *desktop = this->_desktops.value(filename, nullptr);
@@ -84,8 +96,10 @@ QString DesktopEntry::findFilenameByEntryExec(const QString &entryExec) const
 {
     auto end = this->_desktops.keyValueEnd();
     for (auto iter = this->_desktops.keyValueBegin(); iter != end; ++iter) {
-        auto exec = desktopentry_desktop_entry_exec(this->_desktops.value(iter->first));
-        if (exec != nullptr && exec == entryExec) {
+        QString exec = desktopentry_desktop_entry_exec(this->_desktops.value(iter->first));
+        // Strip desktop entry exec arguments.
+        exec = exec.split(' ')[0];
+        if (exec == entryExec) {
             return iter->first;
         }
     }
