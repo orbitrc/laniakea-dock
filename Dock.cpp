@@ -717,6 +717,10 @@ void Dock::onWindowAdded(unsigned long wId)
         this->appendItem(item);
         item = this->find_item_by_class(wm_class);
     }
+    // Update class if not set.
+    if (item != nullptr && !item->cls().has_value()) {
+        item->setCls(wm_class);
+    }
     item->appendWindow(wId);
 }
 
