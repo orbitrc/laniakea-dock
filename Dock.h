@@ -42,6 +42,11 @@ public:
     Q_INVOKABLE QList<int> itemWindowsById(const QString& id) const;
     Q_INVOKABLE QRect itemIconGeometry(const QString& id) const;
     Q_INVOKABLE void itemSetIconGeometry(const QString& id, const QRect& rect);
+    /// @brief Get proper icon name. Depends on system locale or item type.
+    ///
+    /// @param id The item's id.
+    /// @return Found proper name.
+    Q_INVOKABLE QString itemProperIconName(const QString& id);
     Q_INVOKABLE void activateWindow(int wId);
     Q_INVOKABLE void debugPrint(const QString& str) const;
 

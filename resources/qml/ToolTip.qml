@@ -18,7 +18,7 @@ Item {
     Text {
       id: text
 
-      text: Dock.itemClassById(root.itemId)
+      text: Dock.itemProperIconName(root.itemId)
       color: "white"
       font.pixelSize: 18
       font.bold: true

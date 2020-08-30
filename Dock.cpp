@@ -221,6 +221,30 @@ void Dock::itemSetIconGeometry(const QString &id, const QRect &rect)
     }
 }
 
+QString Dock::itemProperIconName(const QString& id)
+{
+    Item *item = nullptr;
+    item = this->item_by_id(id);
+    if (item != nullptr) {
+        switch (item->type()) {
+        case Item::ItemType::DesktopEntry: {
+            auto filename = this->_desktop_entry->findFilenameByPath(item->path());
+            return this->_desktop_entry->entryName(filename);
+        }
+        case Item::ItemType::AppImage: {
+            break;
+        }
+        case Item::ItemType::Exec: {
+            break;
+        }
+        default:
+            break;
+        }
+    }
+
+    return QString();
+}
+
 void Dock::activateWindow(int wId)
 {
     this->activate_window(wId);

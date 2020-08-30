@@ -32,6 +32,12 @@ public:
     ///
     /// @return Filename of desktop. If not exists then returns empty string.
     QString findFilenameByEntryExec(const QString& entryExec) const;
+    /// @brief Find filename by given .desktop file path.
+    ///
+    /// @param path The path that find by.
+    ///
+    /// @return Filename of desktop. If not exists then returns empty string.
+    QString findFilenameByPath(const QString& path) const;
 
 private:
     //======================

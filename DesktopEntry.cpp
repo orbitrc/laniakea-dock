@@ -52,7 +52,7 @@ QString DesktopEntry::entryName(const QString& filename) const
         return QString(name);
     }
 
-    fprintf(stderr, "DesktopEntry::entryName - desktop is nullptr");
+    fprintf(stderr, "DesktopEntry::entryName - desktop is nullptr\n");
     return QString();
 }
 
@@ -108,6 +108,19 @@ QString DesktopEntry::findFilenameByEntryExec(const QString &entryExec) const
         exec = fs::path(exec.toStdString()).filename().c_str();
         auto cmp = fs::path(entryExec.toStdString()).filename().c_str();
         if (exec == cmp) {
+            return iter->first;
+        }
+    }
+
+    return QString();
+}
+
+QString DesktopEntry::findFilenameByPath(const QString& path) const
+{
+    auto end = this->_desktops.keyValueEnd();
+    for (auto&& iter = this->_desktops.keyValueBegin(); iter != end; ++iter) {
+        const char *iter_path = desktopentry_desktop_path(iter->second);
+        if (iter_path == path) {
             return iter->first;
         }
     }

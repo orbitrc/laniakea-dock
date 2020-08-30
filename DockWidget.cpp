@@ -14,6 +14,7 @@ DockWidget::DockWidget(QQmlEngine *engine, QWidget *parent)
 {
     this->set_on_all_desktop();
 
+    /*
     QObject::connect(this, &QQuickWidget::statusChanged, this, [this](QQuickWidget::Status status) {
         if (status == QQuickWidget::Ready) {
             int h = rootObject()->property("height").toInt();
@@ -21,6 +22,8 @@ DockWidget::DockWidget(QQmlEngine *engine, QWidget *parent)
             setGeometry(0, y, width(), height());
         }
     });
+    */
+    setGeometry(0, 360, width(), height());
 }
 
 //===================
