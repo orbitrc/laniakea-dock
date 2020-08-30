@@ -228,6 +228,11 @@ QString Dock::itemProperIconName(const QString& id)
     if (item != nullptr) {
         switch (item->type()) {
         case Item::ItemType::DesktopEntry: {
+            // If item has no path, then fallback to WM_CLASS.
+            if (item->path() == "") {
+                auto cls = item->cls();
+                return cls.has_value() ? cls.value() : "";
+            }
             auto filename = this->_desktop_entry->findFilenameByPath(item->path());
             return this->_desktop_entry->entryName(filename);
         }
