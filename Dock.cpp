@@ -514,6 +514,17 @@ QPixmap Dock::get_window_icon(unsigned long w_id, unsigned long req_size) const
     return pixmap;
 }
 
+unsigned long Dock::get_net_wm_pid(unsigned long w_id) const
+{
+    unsigned long size;
+    unsigned char *ret;
+    ret = this->get_window_property(w_id, "_NET_WM_PID", XA_CARDINAL, &size);
+    auto pid = *(unsigned long*)ret;
+    XFree(ret);
+
+    return pid;
+}
+
 Item* Dock::find_item_by_class(const QString &cls)
 {
     Item *found = nullptr;
@@ -540,14 +551,24 @@ Item* Dock::find_item_by_w_id(unsigned long w_id)
     return found;
 }
 
+Item* Dock::find_item_by_path(const QString &path)
+{
+    Item *found = nullptr;
+    for (auto& item: this->m_items) {
+        if (item->path() == path) {
+            found = item;
+            break;
+        }
+    }
+
+    return found;
+}
+
 QString Dock::find_exec_path_by_w_id(unsigned long w_id)
 {
     namespace fs = std::filesystem;
 
-    unsigned long size;
-    unsigned char *ret;
-    ret = this->get_window_property(w_id, "_NET_WM_PID", XA_CARDINAL, &size);
-    auto pid = *(unsigned long*)ret;
+    auto pid = this->get_net_wm_pid(w_id);
     auto proc_exe = QString("/proc/%1/exe").arg(pid);
     auto symlink_target = fs::read_symlink(proc_exe.toStdString());
     fprintf(stderr, "Dock::find_exec_path_by_w_id - symlink_target: %s\n", symlink_target.c_str());
@@ -650,13 +671,21 @@ void Dock::onWindowAdded(unsigned long wId)
     QString wm_class = this->get_wm_class(wId);
 
     Item *item = this->find_item_by_class(wm_class);
-    // Add an item if not exists yet.
-    if (item == nullptr) {
+    QString path;
+    if (1) {    // wId is a desktop entry window.
         auto exec_path = this->find_exec_path_by_w_id(wId);
         auto filename = this->_desktop_entry->findFilenameByEntryExec(exec_path);
-        auto path = this->_desktop_entry->path(filename);
-        fprintf(stderr, "path for %s: %s\n", filename.toStdString().c_str(), path.toStdString().c_str());
-        this->appendItem(Item::ItemType::DesktopEntry, wm_class);
+        path = this->_desktop_entry->path(filename);
+        // Find item if only path is exists.
+        if (path != "") {
+            item = this->find_item_by_path(path);
+        }
+    }
+    // Add an item if not exists yet.
+    if (item == nullptr) {
+        item = new Item(Item::ItemType::DesktopEntry, path);
+        item->setCls(wm_class);
+        this->appendItem(item);
         item = this->find_item_by_class(wm_class);
     }
     item->appendWindow(wId);

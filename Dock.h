@@ -64,6 +64,7 @@ private:
     bool is_normal_window(unsigned long w_id) const;
     QString get_wm_class(unsigned long w_id) const;
     QPixmap get_window_icon(unsigned long w_id, unsigned long req_size) const;
+    unsigned long get_net_wm_pid(unsigned long w_id) const;
     void update_active_window();
 
     void activate_window(unsigned long w_id);
@@ -78,6 +79,12 @@ private:
     //======================
     Item* find_item_by_class(const QString& cls);
     Item* find_item_by_w_id(unsigned long w_id);
+    /// @brief Find an item by given path.
+    ///
+    /// @param path Path to find.
+    ///
+    /// @return The item or nullptr.
+    Item* find_item_by_path(const QString& path);
     /// @brief Find full exec path by window id.
     ///
     /// e.g. Give 0x04200003 to get "/usr/lib/firefox/firefox".
