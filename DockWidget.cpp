@@ -1,14 +1,26 @@
 #include "DockWidget.h"
 
+#include <QQuickItem>
+#include <QScreen>
+
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
+#ifdef Status
+#undef Status
+#endif
 
 DockWidget::DockWidget(QQmlEngine *engine, QWidget *parent)
     : QQuickWidget(engine, parent)
 {
     this->set_on_all_desktop();
 
-    setGeometry(0, 160, width(), height());
+    QObject::connect(this, &QQuickWidget::statusChanged, this, [this](QQuickWidget::Status status) {
+        if (status == QQuickWidget::Ready) {
+            int h = rootObject()->property("height").toInt();
+            int y = screen()->geometry().height() - h;
+            setGeometry(0, y, width(), height());
+        }
+    });
 }
 
 //===================
