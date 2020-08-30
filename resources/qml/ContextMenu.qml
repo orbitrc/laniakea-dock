@@ -14,9 +14,17 @@ Item {
 
     radius: 10
 
-    Text {
-      text: root.itemId
-      font.pixelSize: 16
+    Flow {
+      flow: Flow.TopToBottom
+
+      Text {
+        text: root.itemId
+        font.pixelSize: 16
+      }
+      Text {
+        text: 'Class: ' + Dock.itemClassById(root.itemId)
+        font.pixelSize: 10
+      }
     }
   }
 }
