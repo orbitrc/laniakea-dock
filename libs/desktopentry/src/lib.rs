@@ -26,6 +26,7 @@ pub struct desktopentry_action {
 
 #[repr(C)]
 pub struct desktopentry_desktop {
+    path: *mut c_char,
     entry: desktopentry_entry,
 }
 
@@ -48,6 +49,7 @@ pub extern "C" fn desktopentry_string_free(c_str: *mut c_char) {
 #[no_mangle]
 pub extern "C" fn desktopentry_desktop_new() -> *mut desktopentry_desktop {
     let box_de = Box::new(desktopentry_desktop {
+        path: ptr::null_mut(),
         entry: desktopentry_entry {
             name: ptr::null_mut(),
             n_locale_names: 0,
@@ -64,6 +66,7 @@ pub extern "C" fn desktopentry_desktop_new() -> *mut desktopentry_desktop {
 #[no_mangle]
 pub extern "C" fn desktopentry_desktop_parse(path: *const c_char) -> *mut desktopentry_desktop {
     let mut box_de = Box::new(desktopentry_desktop {
+        path: ptr::null_mut(),
         entry: desktopentry_entry {
             name: ptr::null_mut(),
             n_locale_names: 0,
@@ -73,6 +76,13 @@ pub extern "C" fn desktopentry_desktop_parse(path: *const c_char) -> *mut deskto
             icons: ptr::null_mut(),
         },
     });
+
+    // Set filename.
+    let file_path = unsafe {
+        CStr::from_ptr(path)
+    };
+    let file_path = CString::from(file_path);
+    (*box_de).path = file_path.into_raw();
 
     // Path as Rust str.
     let file_path = unsafe {
@@ -142,6 +152,20 @@ pub extern "C" fn desktopentry_desktop_parse(path: *const c_char) -> *mut deskto
     }
 
     Box::into_raw(box_de)
+}
+
+#[no_mangle]
+pub extern "C" fn desktopentry_desktop_path(desktop: *const desktopentry_desktop) -> *const c_char {
+    let box_de = unsafe {
+        Box::from_raw(desktop as *mut desktopentry_desktop)
+    };
+
+    let path = (*box_de).path;
+
+    // Put back desktop pointer.
+    Box::into_raw(box_de);
+
+    path
 }
 
 #[no_mangle]
@@ -234,11 +258,12 @@ pub extern "C" fn desktopentry_desktop_free(desktop: *mut desktopentry_desktop) 
     let box_desktop = unsafe {
         Box::from_raw(desktop)
     };
-    if !(*box_desktop).entry.name.is_null() {
-        unsafe {
-            CString::from_raw((*box_desktop).entry.name);   // Free.
-        }
-    }
+    // Free path.
+    desktopentry_string_free((*box_desktop).path);
+
+    // Free entry name.
+    desktopentry_string_free((*box_desktop).entry.name);
+
     if !(*box_desktop).entry.icon_name.is_null() {
         unsafe {
             CString::from_raw((*box_desktop).entry.icon_name);  // Free.

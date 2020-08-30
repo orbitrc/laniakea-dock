@@ -30,6 +30,7 @@ typedef struct desktopentry_action {
  * An .desktop file structure.
  */
 typedef struct desktopentry_desktop {
+    char *path;
     desktopentry_entry entry;
 } desktopentry_desktop;
 
@@ -53,6 +54,14 @@ void desktopentry_string_free(char *str);
  * \param path File path of .desktop file.
  */
 desktopentry_desktop* desktopentry_desktop_parse(const char *path);
+
+/**
+ * Get the path of desktop file.
+ *
+ * @param desktop A desktopentry_desktop object.
+ * @return Path of .desktop file.
+ */
+const char* desktopentry_desktop_path(const desktopentry_desktop *desktop);
 
 /**
  * Get the desktop entry name.

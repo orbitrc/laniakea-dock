@@ -4,8 +4,15 @@
 
 int main()
 {
+    fprintf(stderr, "parse start!\n");
     desktopentry_desktop *desktop = desktopentry_desktop_parse(
         "/usr/share/applications/filezilla.desktop");
+    fprintf(stderr, "parse done!\n");
+
+    //=============
+    // Filename
+    const char *path = desktopentry_desktop_path(desktop);
+    printf("Path: %s\n", path);
 
     //=============
     // Entry name
