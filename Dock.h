@@ -78,6 +78,14 @@ private:
     //======================
     Item* find_item_by_class(const QString& cls);
     Item* find_item_by_w_id(unsigned long w_id);
+    /// @brief Find full exec path by window id.
+    ///
+    /// e.g. Give 0x04200003 to get "/usr/lib/firefox/firefox".
+    ///
+    /// @param w_id The window id.
+    ///
+    /// @return Found full path of exec.
+    QString find_exec_path_by_w_id(unsigned long w_id);
 
     void list_pinned_items();
 

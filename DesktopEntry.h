@@ -19,7 +19,18 @@ public:
     void init();
 
     QString entryName(const QString& filename) const;
+    QString entryExec(const QString& filename) const;
     QString iconPath(const QString& filename, size_t width, size_t height) const;
+
+    //======================
+    // Find methods
+    //======================
+    /// @brief Find filename by given entry exec.
+    ///
+    /// @param entryExec The key that find by.
+    ///
+    /// @return Filename of desktop. If not exists then returns empty string.
+    QString findFilenameByEntryExec(const QString& entryExec) const;
 
 private:
     //======================

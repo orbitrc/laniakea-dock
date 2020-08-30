@@ -44,6 +44,19 @@ QString DesktopEntry::entryName(const QString& filename) const
     return QString();
 }
 
+QString DesktopEntry::entryExec(const QString& filename) const
+{
+    desktopentry_desktop *desktop = this->_desktops.value(filename, nullptr);
+    if (desktop != nullptr) {
+        const char *exec = desktopentry_desktop_entry_exec(desktop);
+
+        return QString(exec);
+    }
+
+    fprintf(stderr, "DesktopEntry::entryExec - desktop is nullptr");
+    return QString();
+}
+
 QString DesktopEntry::iconPath(const QString& filename, size_t width, size_t height) const
 {
     size_t size = width;
@@ -58,6 +71,22 @@ QString DesktopEntry::iconPath(const QString& filename, size_t width, size_t hei
             desktopentry_string_free(path);
 
             return icon_path;
+        }
+    }
+
+    return QString();
+}
+
+//=========================
+// Find methods
+//=========================
+QString DesktopEntry::findFilenameByEntryExec(const QString &entryExec) const
+{
+    auto end = this->_desktops.keyValueEnd();
+    for (auto iter = this->_desktops.keyValueBegin(); iter != end; ++iter) {
+        auto exec = desktopentry_desktop_entry_exec(this->_desktops.value(iter->first));
+        if (exec != nullptr && exec == entryExec) {
+            return iter->first;
         }
     }
 

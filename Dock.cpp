@@ -540,6 +540,20 @@ Item* Dock::find_item_by_w_id(unsigned long w_id)
     return found;
 }
 
+QString Dock::find_exec_path_by_w_id(unsigned long w_id)
+{
+    namespace fs = std::filesystem;
+
+    unsigned long size;
+    unsigned char *ret;
+    ret = this->get_window_property(w_id, "_NET_WM_PID", XA_CARDINAL, &size);
+    auto pid = *(unsigned long*)ret;
+    auto proc_exe = QString("/proc/%1/exe").arg(pid);
+    auto symlink_target = fs::read_symlink(proc_exe.toStdString());
+
+    return QString(symlink_target.c_str());
+}
+
 void Dock::monitor_x_events()
 {
     XSetWindowAttributes attrs;
@@ -637,6 +651,9 @@ void Dock::onWindowAdded(unsigned long wId)
     Item *item = this->find_item_by_class(wm_class);
     // Add an item if not exists yet.
     if (item == nullptr) {
+        auto exec_path = this->find_exec_path_by_w_id(wId);
+        auto filename = this->_desktop_entry->findFilenameByEntryExec(exec_path);
+        fprintf(stderr, "exec_path: %s\n", exec_path.toStdString().c_str());
         this->appendItem(Item::ItemType::DesktopEntry, wm_class);
         item = this->find_item_by_class(wm_class);
     }
