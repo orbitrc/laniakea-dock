@@ -94,12 +94,20 @@ QString DesktopEntry::iconPath(const QString& filename, size_t width, size_t hei
 //=========================
 QString DesktopEntry::findFilenameByEntryExec(const QString &entryExec) const
 {
+    namespace fs = std::filesystem;
+
     auto end = this->_desktops.keyValueEnd();
     for (auto iter = this->_desktops.keyValueBegin(); iter != end; ++iter) {
         QString exec = desktopentry_desktop_entry_exec(this->_desktops.value(iter->first));
         // Strip desktop entry exec arguments.
         exec = exec.split(' ')[0];
         if (exec == entryExec) {
+            return iter->first;
+        }
+        // Strip paths so get only compare exec filename.
+        exec = fs::path(exec.toStdString()).filename().c_str();
+        auto cmp = fs::path(entryExec.toStdString()).filename().c_str();
+        if (exec == cmp) {
             return iter->first;
         }
     }
