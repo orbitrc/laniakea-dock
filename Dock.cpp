@@ -49,8 +49,12 @@ Dock::~Dock()
     // Stop workers.
     this->x_event_monitoring = false;
     this->thr_monitor_x->exit();
-    while (this->thr_monitor_x->isRunning()) {
-        this->thr_monitor_x->wait(100);
+    if (this->thr_monitor_x->isRunning()) {
+        this->thr_monitor_x->wait(200);
+    }
+    if (this->thr_monitor_x->isRunning()) {
+        fprintf(stderr, "Dock::~Dock - Thread not finished. Send dummy event.\n");
+        this->dummy_event();
     }
 
     XCloseDisplay(this->_dpy);
@@ -573,6 +577,34 @@ unsigned long Dock::get_net_wm_pid(unsigned long w_id) const
     XFree(ret);
 
     return pid;
+}
+
+void Dock::dummy_event()
+{
+    XClientMessageEvent evt;
+    // Atoms.
+    Atom atom_net_active_window;
+
+    atom_net_active_window = XInternAtom(this->_dpy, "_NET_ACTIVE_WINDOW", False);
+
+    evt.type = ClientMessage;
+    evt.window = XDefaultRootWindow(this->_dpy);
+    evt.message_type = atom_net_active_window;
+    evt.format = 32;
+    evt.data.l[0] = 2;  // 2 = pager
+    evt.data.l[1] = CurrentTime;    // timestamp
+    evt.data.l[2] = 0;
+    evt.data.l[3] = 0;
+    evt.data.l[4] = 0;
+
+    XSendEvent(
+        this->_dpy,
+        XDefaultRootWindow(this->_dpy),
+        False,
+        PropertyChangeMask,
+        (XEvent*)&evt
+    );
+    XFlush(this->_dpy);
 }
 
 Item* Dock::find_item_by_class(const QString &cls)

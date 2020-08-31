@@ -12,14 +12,6 @@ Rectangle {
 
   color: "#eff0f4"
 
-  Text {
-    width: root.width
-
-    text: Dock.itemClassById(root.itemId)
-    font.pixelSize: 10
-    wrapMode: Text.WrapAnywhere
-  }
-
   Item {
     id: innerShadowSource
 

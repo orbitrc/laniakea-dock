@@ -79,6 +79,7 @@ private:
     QPixmap get_window_icon(unsigned long w_id, unsigned long req_size) const;
     unsigned long get_net_wm_pid(unsigned long w_id) const;
     void update_active_window();
+    void dummy_event();
 
     void activate_window(unsigned long w_id);
 
