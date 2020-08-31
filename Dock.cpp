@@ -1,6 +1,7 @@
 #include "Dock.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <algorithm>
 #include <filesystem>
 
@@ -449,6 +450,7 @@ unsigned char* Dock::get_window_property(unsigned long w_id, const char *prop_na
 {
     Display *dpy;   // To prevent thread blocking.
     Atom prop;
+    unsigned long length = 1024;
     Atom ret_type;
     int ret_format;
     unsigned long n_items;
@@ -461,12 +463,16 @@ unsigned char* Dock::get_window_property(unsigned long w_id, const char *prop_na
     // Get property.
     prop = XInternAtom(dpy, prop_name, False);
 
+    if (strcmp(prop_name, LA_DOCK_EWMH_NET_WM_ICON) == 0) {
+        length = 4194304;   // 2 ** 22
+    }
+
     result = XGetWindowProperty(
         dpy,
         w_id,
         prop,
         0,
-        4194304,    // 2 ** 22
+        length,
         False,
         req_type,
         &ret_type,
@@ -504,7 +510,7 @@ QPixmap Dock::get_window_icon(unsigned long w_id, unsigned long req_size) const
 {
     unsigned long size;
     unsigned char *ret;
-    ret = this->get_window_property(w_id, "_NET_WM_ICON", XA_CARDINAL, &size);
+    ret = this->get_window_property(w_id, LA_DOCK_EWMH_NET_WM_ICON, XA_CARDINAL, &size);
 
     fprintf(stderr, "%ld\n", size);
     unsigned long *icon;

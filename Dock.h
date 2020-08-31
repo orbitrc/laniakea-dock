@@ -15,6 +15,8 @@ class QThread;
 class ConfigFile;
 class DesktopEntry;
 
+#define LA_DOCK_EWMH_NET_WM_ICON "_NET_WM_ICON"
+
 class Dock : public QObject
 {
     Q_OBJECT
