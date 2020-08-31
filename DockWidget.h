@@ -16,6 +16,7 @@ protected:
 
 private:
     void set_on_all_desktop();
+    void set_widget_strut();
 
 signals:
     void geometryChanged();
