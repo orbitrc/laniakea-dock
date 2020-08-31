@@ -255,6 +255,27 @@ void Dock::activateWindow(int wId)
     this->activate_window(wId);
 }
 
+void Dock::runApplication(const QString& id)
+{
+    Item *item = nullptr;
+    item = this->item_by_id(id);
+    if (item != nullptr) {
+        switch (item->type()) {
+        case Item::ItemType::DesktopEntry: {
+            auto filename = this->_desktop_entry->findFilenameByPath(item->path());
+            auto exec = this->_desktop_entry->entryExec(filename).split(' ')[0];
+            popen(exec.toStdString().c_str(), "r");
+        }
+        case Item::ItemType::AppImage: {
+        }
+        case Item::ItemType::Exec: {
+        }
+        default:
+            break;
+        }
+    }
+}
+
 void Dock::debugPrint(const QString &str) const
 {
     fprintf(stderr, "DEBUG: %s\n", str.toStdString().c_str());

@@ -96,7 +96,9 @@ Rectangle {
     onClicked: {
       if (mouse.button === Qt.LeftButton) {
         let wins = Dock.itemWindowsById(root.itemId);
-        Dock.debugPrint(wins.length);
+        if (wins.length === 0) {
+          Dock.runApplication(root.itemId);
+        }
         if (wins.length === 1) {
           Dock.activateWindow(wins[0]);
         }
