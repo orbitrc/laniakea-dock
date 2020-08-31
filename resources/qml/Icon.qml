@@ -22,8 +22,8 @@ Rectangle {
 
       anchors.centerIn: parent
 
-      width: 52
-      height: 52
+      width: 54
+      height: 54
 
       radius: 10
 
