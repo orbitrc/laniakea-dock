@@ -25,6 +25,10 @@ Item {
         text: 'Class: ' + Dock.itemClassById(root.itemId)
         font.pixelSize: 10
       }
+      Text {
+        text: 'Path: ' + Dock.itemPathById(root.itemId)
+        font.pixelSize: 9
+      }
     }
   }
 }

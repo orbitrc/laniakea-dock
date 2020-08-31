@@ -41,6 +41,7 @@ public:
     void appendItem(Item *item);
 
     Q_INVOKABLE QString itemClassById(const QString& id) const;
+    Q_INVOKABLE QString itemPathById(const QString& id) const;
     Q_INVOKABLE QList<int> itemWindowsById(const QString& id) const;
     Q_INVOKABLE QRect itemIconGeometry(const QString& id) const;
     /// @brief Set the item's icon geometry.
