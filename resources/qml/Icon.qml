@@ -10,7 +10,7 @@ Rectangle {
   width: 64
   height: 64
 
-  color: "#eff0f4"
+  color: "#eaeaea"
 
   Item {
     id: innerShadowSource
