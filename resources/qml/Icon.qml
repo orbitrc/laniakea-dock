@@ -79,6 +79,12 @@ Rectangle {
     source: 'image://icons/' + root.itemId
   }
 
+  ColorIndicator {
+    visible: Dock.itemWindowsById(root.itemId).length > 0
+    anchors.horizontalCenter: parent.horizontalCenter
+    y: root.height - (this.height - 2)
+  }
+
   MouseArea {
     anchors.fill: parent
 

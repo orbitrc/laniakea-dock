@@ -4,5 +4,6 @@
         <file>qml/Icon.qml</file>
         <file>qml/ContextMenu.qml</file>
         <file>qml/ToolTip.qml</file>
+        <file>qml/ColorIndicator.qml</file>
     </qresource>
 </RCC>
