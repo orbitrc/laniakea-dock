@@ -77,6 +77,8 @@ Rectangle {
     height: 48
 
     source: 'image://icons/' + root.itemId
+
+    cache: false
   }
 
   ColorIndicator {
