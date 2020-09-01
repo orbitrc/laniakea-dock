@@ -27,6 +27,7 @@ QPixmap IconImageProvider::requestPixmap(const QString& id, QSize *size, const Q
         return this->_dock->item_default_icon(id);
     }
 
+    fprintf(stderr, "= == get_current_window_icon ===\n");
     QPixmap p = this->_dock->current_window_icon(id);
 
     return p;

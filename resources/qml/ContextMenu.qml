@@ -29,6 +29,11 @@ Item {
         text: 'Path: ' + Dock.itemPathById(root.itemId)
         font.pixelSize: 9
       }
+      Image {
+        width: 20
+        height: 20
+        source: 'image://icons/' + root.itemId
+      }
     }
   }
 }
