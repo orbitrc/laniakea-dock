@@ -81,7 +81,7 @@ Rectangle {
   }
 
   ColorIndicator {
-    visible: Dock.itemWindowsById(root.item.id).length > 0
+    visible: root.item.windows.length > 0
     anchors.horizontalCenter: parent.horizontalCenter
     y: root.height - (this.height - 2)
   }
