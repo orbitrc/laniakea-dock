@@ -165,16 +165,18 @@ QPixmap Dock::item_default_icon(const QString &id) const
                 48, // width
                 48  // height
             );
-            QPixmap icon_pixmap;
-            icon_pixmap.load(icon_path);
+            if (icon_path != "") {
+                QPixmap icon_pixmap;
+                icon_pixmap.load(icon_path);
 
-            return icon_pixmap;
+                return icon_pixmap;
+            }
         }
     }
 
-    QPixmap default_pixmap(1, 1);
-    default_pixmap.load(":/img/default-logo-x.svg");
-    return default_pixmap;
+    QPixmap fallback_pixmap;
+    fallback_pixmap.load(":/img/default-logo-x.svg");
+    return fallback_pixmap;
 }
 
 //=========================
