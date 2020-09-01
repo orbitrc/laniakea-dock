@@ -43,7 +43,7 @@ Rectangle {
   Connections {
     target: Dock
 
-    onWidgetGeometryChanged: {
+    function onWidgetGeometryChanged() {
       for (let i = 0; i < icons.count; ++i) {
         icons.itemAt(i).updateIconGeometry();
       }
