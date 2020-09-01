@@ -29,6 +29,11 @@ Item {
         text: 'Path: ' + Dock.itemPathById(root.itemId)
         font.pixelSize: 9
       }
+      Text {
+        text: 'Windows: ' + Dock.itemWindowsById(root.itemId).length
+        font.pixelSize: 10
+      }
+
       Image {
         id: image
 

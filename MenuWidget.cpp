@@ -17,7 +17,7 @@ MenuWidget::MenuWidget(QQmlEngine *engine, QWidget *parent)
 
 MenuWidget::~MenuWidget()
 {
-    fprintf(stderr, "MenuWidget destroy\n");
+//    fprintf(stderr, "MenuWidget destroy\n");
 }
 
 //========================
