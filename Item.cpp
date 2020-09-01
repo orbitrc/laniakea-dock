@@ -53,7 +53,10 @@ QString Item::id() const
 
 void Item::setId(const QString &id)
 {
-    this->m_id = id;
+    if (this->m_id != id) {
+        this->m_id = id;
+        emit this->idChanged(id);
+    }
 }
 
 bool Item::pinned() const

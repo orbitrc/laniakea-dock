@@ -4,8 +4,7 @@ import QtGraphicalEffects 1.0
 Rectangle {
   id: root
 
-  property int wId
-  property string itemId
+  property var item
 
   width: 64
   height: 64
@@ -76,13 +75,13 @@ Rectangle {
     width: 48
     height: 48
 
-    source: 'image://icons/' + root.itemId
+    source: 'image://icons/' + root.item.id
 
     cache: false
   }
 
   ColorIndicator {
-    visible: Dock.itemWindowsById(root.itemId).length > 0
+    visible: Dock.itemWindowsById(root.item.id).length > 0
     anchors.horizontalCenter: parent.horizontalCenter
     y: root.height - (this.height - 2)
   }
@@ -95,20 +94,20 @@ Rectangle {
 
     onClicked: {
       if (mouse.button === Qt.LeftButton) {
-        let wins = Dock.itemWindowsById(root.itemId);
+        let wins = Dock.itemWindowsById(root.item.id);
         if (wins.length === 0) {
-          Dock.runApplication(root.itemId);
+          Dock.runApplication(root.item.id);
         }
         if (wins.length === 1) {
           Dock.activateWindow(wins[0]);
         }
       } else if (mouse.button === Qt.RightButton) {
-        PopUpManager.showContextMenu(root.itemId);
+        PopUpManager.showContextMenu(root.item.id);
       }
     }
 
     onEntered: {
-      PopUpManager.showToolTip(root.itemId);
+      PopUpManager.showToolTip(root.item.id);
     }
 
     onExited: {
@@ -117,7 +116,7 @@ Rectangle {
   }
 
   function isActive() {
-    return root.itemId == Dock.activeWindowItemId;
+    return root.item.id === Dock.activeWindowItemId;
   }
 
   function updateIconGeometry() {

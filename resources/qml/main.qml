@@ -13,10 +13,9 @@ Rectangle {
     Repeater {
       id: icons
 
-      model: Dock.itemIds.length
+      model: Dock.items.length
       Icon {
-//        wId: Dock.itemIds[index]
-        itemId: Dock.itemIds[index]
+        item: Dock.items[index]
       }
     }
   }

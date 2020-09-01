@@ -12,6 +12,8 @@
 class Item : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(QString id READ id WRITE setId NOTIFY idChanged)
 public:
     enum class ItemType {
         DesktopEntry,
@@ -47,6 +49,8 @@ public:
     void setIconGeometry(const QRect& rect);
 
 signals:
+    void idChanged(const QString& id);
+
     void iconGeometryChanged(const QRect& rect);
 
 public slots:

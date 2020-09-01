@@ -70,6 +70,11 @@ QList<int> Dock::windows() const
     return this->m_windows;
 }
 
+QList<Item*> Dock::items() const
+{
+    return this->m_items;
+}
+
 QList<QString> Dock::pinnedIds() const
 {
     QList<QString> ids;
@@ -754,6 +759,7 @@ void Dock::activate_window(unsigned long w_id)
 void Dock::onItemAdded()
 {
     emit this->itemIdsChanged();
+    emit this->itemsChanged();
 }
 
 void Dock::onActiveWindowChanged()
