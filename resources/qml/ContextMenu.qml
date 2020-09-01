@@ -30,6 +30,8 @@ Item {
         font.pixelSize: 9
       }
       Image {
+        id: image
+
         width: 20
         height: 20
         source: 'image://icons/' + root.itemId

@@ -133,12 +133,7 @@ QPixmap Dock::current_window_icon(const QString &id) const
 {
     Item *item = nullptr;
 
-    for (int i = 0; i < this->m_items.length(); ++i) {
-        if (this->m_items[i]->id() == id) {
-            item = this->m_items[i];
-            break;
-        }
-    }
+    item = this->item_by_id(id);
 
     if (item != nullptr && item->windows().length() > 0) {
         fprintf(stderr, "Dock::current_window_icon - Found item: %s\n", item->id().toStdString().c_str());
