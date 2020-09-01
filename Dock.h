@@ -120,7 +120,7 @@ signals:
     void pinnedIdsChanged();
     void itemIdsChanged();
     void itemAdded();
-    void activeWindowChanged();
+    void activeWindowChanged(unsigned long wId);
     void activeWindowItemIdChanged();
 
     void widgetGeometryChanged();

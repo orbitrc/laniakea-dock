@@ -717,7 +717,7 @@ void Dock::update_active_window()
     if ((int)w != this->m_activeWindow) {
         this->m_activeWindow = w;
 
-        emit this->activeWindowChanged();
+        emit this->activeWindowChanged(w);
     }
 
     XFree(ret);
