@@ -94,7 +94,7 @@ Rectangle {
 
     onClicked: {
       if (mouse.button === Qt.LeftButton) {
-        let wins = Dock.itemWindowsById(root.item.id);
+        let wins = root.item.windows;
         if (wins.length === 0) {
           Dock.runApplication(root.item.id);
         }
@@ -102,7 +102,7 @@ Rectangle {
           Dock.activateWindow(wins[0]);
         }
       } else if (mouse.button === Qt.RightButton) {
-        PopUpManager.showContextMenu(root.item.id);
+        PopUpManager.showContextMenu(root.item);
       }
     }
 
@@ -121,6 +121,7 @@ Rectangle {
 
   function updateIconGeometry() {
     let global = mapToGlobal(0, 0);
-    Dock.itemSetIconGeometry(root.itemId, Qt.rect(global.x, global.y, root.width, root.height));
+    Dock.itemSetIconGeometry(root.item.id,
+      Qt.rect(global.x, global.y, root.width, root.height));
   }
 }

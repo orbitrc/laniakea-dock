@@ -3,7 +3,7 @@ import QtQuick 2.12
 Item {
   id: root
 
-  property string itemId
+  property var item
 
   width: 160
   height: 200
@@ -18,19 +18,19 @@ Item {
       flow: Flow.TopToBottom
 
       Text {
-        text: root.itemId
+        text: root.item.id
         font.pixelSize: 16
       }
       Text {
-        text: 'Class: ' + Dock.itemClassById(root.itemId)
+        text: 'Class: ' + Dock.itemClassById(root.item.id)
         font.pixelSize: 10
       }
       Text {
-        text: 'Path: ' + Dock.itemPathById(root.itemId)
+        text: 'Path: ' + root.item.path
         font.pixelSize: 9
       }
       Text {
-        text: 'Windows: ' + Dock.itemWindowsById(root.itemId).length
+        text: 'Windows: ' + root.item.windows.length
         font.pixelSize: 10
       }
 
@@ -42,9 +42,5 @@ Item {
         source: ''
       }
     }
-  }
-
-  onItemIdChanged: {
-    image.source = 'image://icons/' + root.itemId;
   }
 }

@@ -14,6 +14,9 @@ class Item : public QObject
     Q_OBJECT
 
     Q_PROPERTY(QString id READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
+    Q_PROPERTY(bool pinned READ pinned WRITE setPinned NOTIFY pinnedChanged)
+    Q_PROPERTY(QList<int> windows READ windows NOTIFY windowsChanged)
 public:
     enum class ItemType {
         DesktopEntry,
@@ -50,6 +53,9 @@ public:
 
 signals:
     void idChanged(const QString& id);
+    void pathChanged(const QString& path);
+    void pinnedChanged(bool pinned);
+    void windowsChanged();
 
     void iconGeometryChanged(const QRect& rect);
 

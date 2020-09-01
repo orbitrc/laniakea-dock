@@ -1,6 +1,9 @@
 QT += core quick quickwidgets
 
 CONFIG += c++17
+CONFIG(debug, debug|release) {
+    CONFIG += qml_debug
+}
 
 INCLUDEPATH += libs/desktopentry/include
 

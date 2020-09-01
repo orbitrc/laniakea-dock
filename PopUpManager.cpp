@@ -6,6 +6,7 @@
 #include "ToolTipWidget.h"
 
 #include "Dock.h"
+#include "Item.h"
 
 PopUpManager::PopUpManager(QQmlEngine *engine, Dock *dock, QObject *parent)
     : QObject(parent)
@@ -19,7 +20,24 @@ PopUpManager::PopUpManager(QQmlEngine *engine, Dock *dock, QObject *parent)
 //=========================
 // Q_INVOKABLE methods
 //=========================
-void PopUpManager::showContextMenu(const QString &id)
+void PopUpManager::showContextMenu(Item *item)
+{
+    MenuWidget *menuWidget = new MenuWidget(this->_engine);
+    menuWidget->setSource(QUrl("qrc:/qml/ContextMenu.qml"));
+    menuWidget->rootObject()->setProperty("item", QVariant::fromValue(item));
+
+    // Set geometry.
+    int offset_x = ((menuWidget->width() / 2) - (item->iconGeometry().width() / 2));
+    menuWidget->setGeometry(
+        item->iconGeometry().x() - offset_x,
+        item->iconGeometry().y() - menuWidget->height(),
+        menuWidget->width(), menuWidget->height()
+    );
+
+    menuWidget->show();
+}
+
+void PopUpManager::showContextMenuById(const QString &id)
 {
     MenuWidget *menuWidget = new MenuWidget(this->_engine);
     menuWidget->setSource(QUrl("qrc:/qml/ContextMenu.qml"));

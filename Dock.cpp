@@ -198,15 +198,9 @@ QString Dock::itemClassById(const QString& id) const
     return QString();
 }
 
-QString Dock::itemPathById(const QString &id) const
+Item* Dock::itemById(const QString& id) const
 {
-    Item *item = nullptr;
-    item = this->item_by_id(id);
-    if (item != nullptr) {
-        return item->path();
-    }
-
-    return QString();
+    return item_by_id(id);
 }
 
 QList<int> Dock::itemWindowsById(const QString &id) const

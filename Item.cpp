@@ -66,7 +66,11 @@ bool Item::pinned() const
 
 void Item::setPinned(bool val)
 {
-    this->m_pinned = val;
+    if (this->m_pinned != val) {
+        this->m_pinned = val;
+
+        emit this->pinnedChanged(val);
+    }
 }
 
 Item::ItemType Item::type() const
@@ -103,6 +107,8 @@ void Item::setPath(const QString &path)
 {
     if (this->m_path != path) {
         this->m_path = path;
+
+        emit this->pathChanged(path);
     }
 }
 
@@ -114,11 +120,15 @@ QList<int> Item::windows() const
 void Item::appendWindow(int wId)
 {
     this->m_wIds.append(wId);
+
+    emit this->windowsChanged();
 }
 
 void Item::removeWindow(int wId)
 {
     this->m_wIds.removeOne(wId);
+
+    emit this->windowsChanged();
 }
 
 QRect Item::iconGeometry() const
