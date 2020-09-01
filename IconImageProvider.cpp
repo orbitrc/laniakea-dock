@@ -27,7 +27,8 @@ QPixmap IconImageProvider::requestPixmap(const QString& id, QSize *size, const Q
         return this->_dock->item_default_icon(id);
     }
 
-    fprintf(stderr, "IconImageProvider::requestPixmap - id: %s\n", id.toStdString().c_str());
+    fprintf(stderr, "IconImageProvider::requestPixmap - id: %s (%s)\n",
+        id.toStdString().c_str(), this->_dock->itemClassById(id).toStdString().c_str());
     QPixmap p = this->_dock->current_window_icon(id);
 
     return p;

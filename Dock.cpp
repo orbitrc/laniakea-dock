@@ -518,6 +518,7 @@ QPixmap Dock::get_window_icon(unsigned long w_id, unsigned long req_size) const
 {
     unsigned long size;
     unsigned char *ret;
+    fprintf(stderr, "Dock::get_window_icon(%ld)\n", w_id);
     ret = this->get_window_property(w_id, LA_DOCK_EWMH_NET_WM_ICON, XA_CARDINAL, &size);
 
     fprintf(stderr, "%ld\n", size);

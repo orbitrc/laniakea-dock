@@ -34,8 +34,12 @@ Item {
 
         width: 20
         height: 20
-        source: 'image://icons/' + root.itemId
+        source: ''
       }
     }
+  }
+
+  onItemIdChanged: {
+    image.source = 'image://icons/' + root.itemId;
   }
 }
