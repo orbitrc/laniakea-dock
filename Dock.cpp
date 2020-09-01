@@ -172,9 +172,9 @@ QPixmap Dock::item_default_icon(const QString &id) const
         }
     }
 
-    QPixmap null_pixmap(1, 1);
-    null_pixmap.fill(QColor(255, 0, 0, 100));
-    return null_pixmap;
+    QPixmap default_pixmap(1, 1);
+    default_pixmap.load(":/img/default-logo-x.svg");
+    return default_pixmap;
 }
 
 //=========================
