@@ -59,7 +59,7 @@ Item {
         width: largestWidth()
       }
       MenuItem {
-        title: 'Pinned: ' + root.item.pinned
+        title: 'Pinned: ' + (root.item ? root.item.pinned : '')
         disabled: true
 
         width: largestWidth()
@@ -67,7 +67,7 @@ Item {
       MenuItem {
         title: 'Pin/Unpin'
         checkable: true
-        checked: root.item.pinned ? true : false
+        checked: (root.item) ? (root.item.pinned ? true : false) : ''
         action: function() {
           root.item.pinned = !root.item.pinned;
         }
