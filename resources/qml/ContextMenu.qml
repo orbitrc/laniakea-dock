@@ -16,6 +16,7 @@ Item {
 
     radius: 10
     clip: true
+    color: "black"
 
     Flow {
       flow: Flow.TopToBottom
@@ -23,20 +24,24 @@ Item {
       anchors.fill: parent
 
       Text {
-        text: root.item.id
-        font.pixelSize: 16
+        text: (root.item) ? root.item.id : ''
+        font.pixelSize: 13
+        color: "white"
       }
       Text {
-        text: 'Class: ' + Dock.itemClassById(root.item.id)
+        text: 'Class: ' + (root.item ? Dock.itemClassById(root.item.id) : '')
         font.pixelSize: 10
+        color: "white"
       }
       Text {
-        text: 'Path: ' + root.item.path
-        font.pixelSize: 9
-      }
-      Text {
-        text: 'Windows: ' + root.item.windows.length
+        text: 'Path: ' + (root.item ? root.item.path : '')
         font.pixelSize: 10
+        color: "white"
+      }
+      Text {
+        text: 'Windows: ' + (root.item ? root.item.windows.length : '')
+        font.pixelSize: 10
+        color: "white"
       }
 
       Loader {
@@ -77,6 +82,7 @@ Item {
 
     MenuItem {
       title: 'Pinned: ' + root.item.pinned
+      disabled: true
     }
   }
   Component {

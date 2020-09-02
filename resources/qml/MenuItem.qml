@@ -13,7 +13,7 @@ Rectangle {
   height: 32
   implicitWidth: 20 + 30 + titleText.implicitWidth
 
-  color: "cyan"
+  color: "transparent"
 
   states: [
     State {
@@ -31,7 +31,7 @@ Rectangle {
     width: 20
     height: 20
 
-    border.color: "black"
+    border.color: "white"
     color: root.checked ? "red" : "transparent"
   }
 
@@ -39,6 +39,7 @@ Rectangle {
     id: titleText
     x: 30
     text: root.title
+    color: !disabled ? "white" : "grey"
   }
 
   MouseArea {
