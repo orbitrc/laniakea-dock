@@ -14,6 +14,7 @@ public:
 protected:
     virtual bool event(QEvent *) override;
     virtual void mousePressEvent(QMouseEvent *) override;
+    virtual void mouseReleaseEvent(QMouseEvent *) override;
 };
 
 #endif // DOCK_MENUWIDGET_H

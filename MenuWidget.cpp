@@ -39,14 +39,32 @@ bool MenuWidget::event(QEvent *evt)
 
 void MenuWidget::mousePressEvent(QMouseEvent *evt)
 {
-    releaseMouse();
-    QWindow *window = windowHandle();
-    if (window) {
-        window->setMouseGrabEnabled(false);
+    if (!geometry().contains(evt->globalPos())) {
+        releaseMouse();
+        QWindow *window = windowHandle();
+        if (window) {
+            window->setMouseGrabEnabled(false);
+        }
+
+        close();
+        deleteLater();
     }
 
-    close();
-
     QQuickWidget::mousePressEvent(evt);
-    deleteLater();
+}
+
+void MenuWidget::mouseReleaseEvent(QMouseEvent *evt)
+{
+    if (geometry().contains(evt->globalPos())) {
+        releaseMouse();
+        QWindow *window = windowHandle();
+        if (window) {
+            window->setMouseGrabEnabled(false);
+        }
+
+        close();
+        deleteLater();
+    }
+
+    QQuickWidget::mouseReleaseEvent(evt);
 }

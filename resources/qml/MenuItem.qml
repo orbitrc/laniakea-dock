@@ -5,7 +5,10 @@ Rectangle {
 
   property var item: null
   property bool disabled: false
-  property string text
+  property string title: ''
+  property var action: null
+  property bool checkable: false
+  property bool checked: false
 
   height: 32
 
@@ -21,8 +24,19 @@ Rectangle {
     }
   ]
 
+  Rectangle {
+    visible: root.checkable
+
+    width: 20
+    height: 20
+
+    border.color: "black"
+    color: root.checked ? "red" : "transparent"
+  }
+
   Text {
-    text: root.text
+    x: 30
+    text: root.title
   }
 
   MouseArea {
@@ -32,6 +46,11 @@ Rectangle {
 
     hoverEnabled: true
 
+    onClicked: {
+      if (root.action) {
+        root.action();
+      }
+    }
     onEntered: {
       if (!root.disabled) {
         root.state = 'hovered';

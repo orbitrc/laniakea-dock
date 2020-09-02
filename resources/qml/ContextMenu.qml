@@ -63,23 +63,18 @@ Item {
     id: isPinnedComponent
 
     MenuItem {
-      text: 'Pinned: ' + root.item.pinned
+      title: 'Pinned: ' + root.item.pinned
     }
   }
   Component {
     id: pinUnpinComponent
 
     MenuItem {
-      Flow {
-        Rectangle {
-          width: 20
-          height: 20
-          border.color: "black"
-          color: (root.item !== null) ? (root.item.pinned ? "red" : "white") : "white"
-        }
-        Text {
-          text: 'Pin/Unpin'
-        }
+      title: 'Pin/Unpin'
+      checkable: true
+      checked: root.item.pinned ? true : false
+      action: function() {
+        print('hello??');
       }
     }
   }
