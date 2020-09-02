@@ -117,6 +117,12 @@ void Dock::appendItem(Item::ItemType type, QString cls, bool pinned)
 
 void Dock::appendItem(Item *item)
 {
+    QObject::connect(item, &Item::pinnedChanged, this, [this, item](bool pinned) {
+        if (pinned) {
+            this->pinItem(item);
+        } else {
+        }
+    });
     this->m_items.append(item);
 
     emit this->itemAdded();
@@ -827,15 +833,19 @@ void Dock::pinItem(const Item *item)
         type = "Exec";
         break;
     default:
-        fprintf(stderr, "Dock::pinItem - type error: %d\n", item->type());
+        fprintf(stderr, "Dock::pinItem - type error: %d\n", static_cast<int>(item->type()));
         return;
     }
 
     values.insert("Type", type);
     values.insert("Path", item->path());
 
-    this->_config->append_section(values);
-    this->_config->save();
+    if (!this->_config->append_section(values)) {
+        fprintf(stderr, "Dock::pinItem - append_section failed.\n");
+    }
+    if (!this->_config->save()) {
+        fprintf(stderr, "Dock::pinItem - save failed.\n");
+    }
 }
 
 void Dock::unpinItem(const Item *item)

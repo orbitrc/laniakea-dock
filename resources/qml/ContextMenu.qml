@@ -74,7 +74,7 @@ Item {
       checkable: true
       checked: root.item.pinned ? true : false
       action: function() {
-        print('hello??');
+        root.item.pinned = !root.item.pinned;
       }
     }
   }

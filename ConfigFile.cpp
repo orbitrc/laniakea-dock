@@ -85,8 +85,8 @@ bool ConfigFile::save()
         auto section_values = this->_config.value(section);
         stream << QString("[%1]").arg(section);
         stream << "\n";
-        auto type = this->get_string(section, "Type");
         // Write type.
+        auto type = this->get_string(section, "Type");
         if (!type.has_value()) {
             f_tmp.remove();
             return false;
@@ -106,6 +106,7 @@ bool ConfigFile::save()
 
     // Copy tmp file to real config file.
     auto path = fs::path(getenv("HOME")) / LA_DOCK_CONFIG_PATH;
+    QFile::remove(path.c_str());
     auto copied = f_tmp.copy(path.c_str());
     f_tmp.remove();
     if (!copied) {
