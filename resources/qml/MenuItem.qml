@@ -11,6 +11,7 @@ Rectangle {
   property bool checked: false
 
   height: 32
+  implicitWidth: 20 + 30 + titleText.implicitWidth
 
   color: "cyan"
 
@@ -35,6 +36,7 @@ Rectangle {
   }
 
   Text {
+    id: titleText
     x: 30
     text: root.title
   }

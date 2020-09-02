@@ -27,16 +27,18 @@ void PopUpManager::showContextMenu(Item *item)
     menuWidget->rootObject()->setProperty("item", QVariant::fromValue(item));
 
     // Set geometry.
-    int offset_x = ((menuWidget->width() / 2) - (item->iconGeometry().width() / 2));
+    int menu_width = menuWidget->rootObject()->property("width").toInt();
+    int offset_x = ((menu_width / 2) - (item->iconGeometry().width() / 2));
     menuWidget->setGeometry(
         item->iconGeometry().x() - offset_x,
         item->iconGeometry().y() - menuWidget->height(),
-        menuWidget->width(), menuWidget->height()
+        menu_width, menuWidget->height()
     );
 
     menuWidget->show();
 }
 
+// TODO: Delete function.
 void PopUpManager::showContextMenuById(const QString &id)
 {
     MenuWidget *menuWidget = new MenuWidget(this->_engine);

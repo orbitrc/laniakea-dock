@@ -5,14 +5,17 @@ Item {
 
   property var item: null
 
-  width: 160
+  width: (clickToDebugLoader.item) ? clickToDebugLoader.item.width : 160
   height: 200
 
   Rectangle {
+    id: menuRect
+
     anchors.fill: parent
     anchors.margins: 10
 
     radius: 10
+    clip: true
 
     Flow {
       flow: Flow.TopToBottom
@@ -36,22 +39,20 @@ Item {
         font.pixelSize: 10
       }
 
-      Image {
-        id: image
+      Loader {
+        id: clickToDebugLoader
 
-        width: 20
-        height: 20
-        source: ''
+        width: (item) ? item.implicitWidth : parent.width
       }
       Loader {
         id: isPinnedLoader
 
-        width: parent.width
+        width: (item) ? item.implicitWidth : parent.width
       }
       Loader {
         id: pinUnpinLoader
 
-        width: parent.width
+        width: (item) ? item.implicitWidth : parent.width
       }
     }
   }
@@ -59,6 +60,18 @@ Item {
   //==================
   // Components
   //==================
+  Component {
+    id: clickToDebugComponent
+
+    MenuItem {
+      title: 'Click to Debug'
+      action: function() {
+        print(root.width);
+        print(menuRect.width);
+        print(this.implicitWidth);
+      }
+    }
+  }
   Component {
     id: isPinnedComponent
 
@@ -81,6 +94,7 @@ Item {
 
   onItemChanged: {
     if (root.item !== null) {
+      clickToDebugLoader.sourceComponent = clickToDebugComponent;
       isPinnedLoader.sourceComponent = isPinnedComponent;
       pinUnpinLoader.sourceComponent = pinUnpinComponent;
     }
