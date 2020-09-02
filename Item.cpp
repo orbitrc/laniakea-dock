@@ -11,6 +11,8 @@ Item::Item(ItemType type, const QString& path, QObject *parent)
 {
     this->setId(QUuid::createUuid().toString(QUuid::StringFormat::WithoutBraces));
 
+    // Initialize members.
+    this->m_pinned = false;
     this->setType(type);
     this->setPath(path);
 
@@ -45,6 +47,10 @@ Item::~Item()
         break;
     }
 }
+
+//=============================
+// Property getters/setters
+//=============================
 
 QString Item::id() const
 {

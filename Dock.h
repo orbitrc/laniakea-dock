@@ -133,6 +133,8 @@ public slots:
     void onActiveWindowChanged();
     void onWindowAdded(unsigned long wId);
     void onWindowRemoved(unsigned long wId);
+    void pinItem(const Item *item);
+    void unpinItem(const Item *item);
 
 private:
     QList<int> m_windows;

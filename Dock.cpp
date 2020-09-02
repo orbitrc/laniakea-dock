@@ -102,6 +102,13 @@ void Dock::appendItem(Item::ItemType type, QString cls, bool pinned)
     Item *item = new Item(type);
     item->setCls(cls);
     item->setPinned(pinned);
+    // Connect to the pinned signal.
+    QObject::connect(item, &Item::pinnedChanged, this, [this, item](bool pinned) {
+        if (pinned) {
+            this->pinItem(item);
+        } else {
+        }
+    });
 
     this->m_items.append(item);
 
@@ -803,4 +810,34 @@ void Dock::onWindowRemoved(unsigned long wId)
         this->m_items.removeOne(item);
         emit this->itemIdsChanged();
     }
+}
+
+void Dock::pinItem(const Item *item)
+{
+    QMap<QString, QString> values;
+    QString type;
+    switch (item->type()) {
+    case Item::ItemType::DesktopEntry:
+        type = "DesktopEntry";
+        break;
+    case Item::ItemType::AppImage:
+        type = "AppImage";
+        break;
+    case Item::ItemType::Exec:
+        type = "Exec";
+        break;
+    default:
+        fprintf(stderr, "Dock::pinItem - type error: %d\n", item->type());
+        return;
+    }
+
+    values.insert("Type", type);
+    values.insert("Path", item->path());
+
+    this->_config->append_section(values);
+    this->_config->save();
+}
+
+void Dock::unpinItem(const Item *item)
+{
 }

@@ -6,5 +6,6 @@
         <file>qml/ToolTip.qml</file>
         <file>qml/ColorIndicator.qml</file>
         <file>img/default-logo-x.svg</file>
+        <file>qml/MenuItem.qml</file>
     </qresource>
 </RCC>

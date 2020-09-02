@@ -106,8 +106,11 @@ bool ConfigFile::save()
 
     // Copy tmp file to real config file.
     auto path = fs::path(getenv("HOME")) / LA_DOCK_CONFIG_PATH;
-    f_tmp.copy(path.c_str());
+    auto copied = f_tmp.copy(path.c_str());
     f_tmp.remove();
+    if (!copied) {
+        return false;
+    }
 
     return true;
 }
