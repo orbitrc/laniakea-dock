@@ -1,10 +1,12 @@
 #include "ConfigFile.h"
 
 #include <stdlib.h>
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 
 #include <QFile>
+#include <QTextStream>
 
 namespace fs = std::filesystem;
 
@@ -62,6 +64,54 @@ void ConfigFile::load()
     f.close();
 }
 
+bool ConfigFile::save()
+{
+    auto keys = this->sections();
+    std::sort(keys.begin(), keys.end());
+
+    // Open temporary file.
+    auto tmp_path = fs::path(getenv("HOME")) / LA_DOCK_CONFIG_PATH_TMP;
+    QFile f_tmp(tmp_path.c_str());
+    if (!f_tmp.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        fprintf(stderr, "FILE ERROR: %s\n", f_tmp.errorString().toStdString().c_str());
+        f_tmp.close();
+        return false;
+    }
+    QTextStream stream(&f_tmp);
+
+    // Write contents to file.
+    for (auto&& section: keys) {
+        // Write section.
+        auto section_values = this->_config.value(section);
+        stream << QString("[%1]").arg(section);
+        stream << "\n";
+        auto type = this->get_string(section, "Type");
+        // Write type.
+        if (!type.has_value()) {
+            f_tmp.remove();
+            return false;
+        }
+        stream << QString("Type=") + type.value();
+        stream << "\n";
+        // Write path.
+        auto path = this->get_string(section, "Path");
+        if (!path.has_value()) {
+            f_tmp.remove();
+            return false;
+        }
+        stream << QString("Path=") + path.value();
+        stream << "\n\n";
+    }
+    f_tmp.close();
+
+    // Copy tmp file to real config file.
+    auto path = fs::path(getenv("HOME")) / LA_DOCK_CONFIG_PATH;
+    f_tmp.copy(path.c_str());
+    f_tmp.remove();
+
+    return true;
+}
+
 QList<QString> ConfigFile::sections() const
 {
     return this->_config.keys();
@@ -78,4 +128,40 @@ std::optional<QString> ConfigFile::get_string(const QString& section, const QStr
     } else {
         return std::optional<QString>();
     }
+}
+
+//==========================
+// Insert, append, remove
+//==========================
+
+bool ConfigFile::append_section(const QMap<QString, QString> &values)
+{
+    // Find last index.
+    auto idx = this->sections().length();
+
+    // Make section name.
+    QString section = QString("Item %1").arg(idx);
+
+    // Validate values.
+    if (!values.contains("Type")) {
+        return false;
+    }
+    if (!values.contains("Path")) {
+        return false;
+    }
+
+    // Insert.
+    this->_config.insert(section, values);
+
+    return true;
+}
+
+bool ConfigFile::insert_section(size_t index, const QMap<QString, QString> &values)
+{
+    // TODO: Implement.
+    #warning "ConfigFile::insert_section not implemented"
+    (void)index;
+    (void)values;
+
+    return false;
 }
