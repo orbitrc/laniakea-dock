@@ -5,8 +5,8 @@ Item {
 
   property var item: null
 
-  width: (clickToDebugLoader.item) ? clickToDebugLoader.item.width : 160
-  height: 200
+  width: (clickToDebug) ? largestWidth() : 160
+  height: 260
 
   Rectangle {
     id: menuRect
@@ -19,45 +19,60 @@ Item {
     color: "black"
 
     Flow {
+      id: menuItems
+
       flow: Flow.TopToBottom
 
       anchors.fill: parent
 
-      Text {
-        text: (root.item) ? root.item.id : ''
-        font.pixelSize: 13
-        color: "white"
-      }
-      Text {
-        text: 'Class: ' + (root.item ? Dock.itemClassById(root.item.id) : '')
-        font.pixelSize: 10
-        color: "white"
-      }
-      Text {
-        text: 'Path: ' + (root.item ? root.item.path : '')
-        font.pixelSize: 10
-        color: "white"
-      }
-      Text {
-        text: 'Windows: ' + (root.item ? root.item.windows.length : '')
-        font.pixelSize: 10
-        color: "white"
-      }
+      MenuItem {
+        title: (root.item) ? root.item.id : ''
+        disabled: true
 
-      Loader {
-        id: clickToDebugLoader
-
-        width: (item) ? item.implicitWidth : parent.width
+        width: largestWidth()
       }
-      Loader {
-        id: isPinnedLoader
+      MenuItem {
+        title: 'Class: ' + (root.item ? Dock.itemClassById(root.item.id) : '')
+        disabled: true
 
-        width: (item) ? item.implicitWidth : parent.width
+        width: largestWidth()
       }
-      Loader {
-        id: pinUnpinLoader
+      MenuItem {
+        title: 'Path: ' + (root.item ? root.item.path : '')
+        disabled: true
 
-        width: (item) ? item.implicitWidth : parent.width
+        width: largestWidth()
+      }
+      MenuItem {
+        title: 'Windows: ' + (root.item ? root.item.windows.length : '')
+
+        width: largestWidth()
+      }
+      MenuItem {
+        id: clickToDebug
+
+        title: 'Click to Debug'
+        action: function() {
+          print(largestWidth());
+        }
+
+        width: largestWidth()
+      }
+      MenuItem {
+        title: 'Pinned: ' + root.item.pinned
+        disabled: true
+
+        width: largestWidth()
+      }
+      MenuItem {
+        title: 'Pin/Unpin'
+        checkable: true
+        checked: root.item.pinned ? true : false
+        action: function() {
+          root.item.pinned = !root.item.pinned;
+        }
+
+        width: largestWidth()
       }
     }
   }
@@ -65,44 +80,20 @@ Item {
   //==================
   // Components
   //==================
-  Component {
-    id: clickToDebugComponent
-
-    MenuItem {
-      title: 'Click to Debug'
-      action: function() {
-        print(root.width);
-        print(menuRect.width);
-        print(this.implicitWidth);
-      }
-    }
-  }
-  Component {
-    id: isPinnedComponent
-
-    MenuItem {
-      title: 'Pinned: ' + root.item.pinned
-      disabled: true
-    }
-  }
-  Component {
-    id: pinUnpinComponent
-
-    MenuItem {
-      title: 'Pin/Unpin'
-      checkable: true
-      checked: root.item.pinned ? true : false
-      action: function() {
-        root.item.pinned = !root.item.pinned;
-      }
-    }
-  }
-
   onItemChanged: {
     if (root.item !== null) {
-      clickToDebugLoader.sourceComponent = clickToDebugComponent;
-      isPinnedLoader.sourceComponent = isPinnedComponent;
-      pinUnpinLoader.sourceComponent = pinUnpinComponent;
     }
+  }
+
+  function largestWidth() {
+    let largest = 0;
+    for (let i = 0; i < menuItems.children.length; ++i) {
+      let item = menuItems.children[i];
+      if (item.implicitWidth > largest) {
+        largest = item.implicitWidth;
+      }
+    }
+
+    return largest;
   }
 }
