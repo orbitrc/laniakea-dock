@@ -815,6 +815,7 @@ void Dock::onWindowRemoved(unsigned long wId)
     if (item->windows().length() == 0 && !item->pinned()) {
         this->m_items.removeOne(item);
         emit this->itemIdsChanged();
+        emit this->itemsChanged();
     }
 }
 
