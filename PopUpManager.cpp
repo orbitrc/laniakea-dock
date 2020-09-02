@@ -92,6 +92,6 @@ void PopUpManager::hideToolTip()
 {
     if (this->_tool_tip) {
         this->_tool_tip->close();
-        this->_tool_tip->deleteLater();
+//        this->_tool_tip->deleteLater();
     }
 }
