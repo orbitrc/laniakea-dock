@@ -679,7 +679,11 @@ QString Dock::find_exec_path_by_w_id(unsigned long w_id)
 
     auto pid = this->get_net_wm_pid(w_id);
     auto proc_exe = QString("/proc/%1/exe").arg(pid);
-    auto symlink_target = fs::read_symlink(proc_exe.toStdString());
+    std::error_code err;
+    auto symlink_target = fs::read_symlink(proc_exe.toStdString(), err);
+    if (err) {
+        fprintf(stderr, "Dock::find_exec_path_by_w_id - %s\n", err.message().c_str());
+    }
     fprintf(stderr, "Dock::find_exec_path_by_w_id - symlink_target: %s\n", symlink_target.c_str());
 
     return QString(symlink_target.c_str());
