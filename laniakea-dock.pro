@@ -31,6 +31,7 @@ HEADERS += \
     DesktopEntry.h \
     Dock.h \
     DockWidget.h \
+    Ewmh.h \
     IconImageProvider.h \
     Item.h \
     MenuWidget.h \
@@ -42,6 +43,7 @@ SOURCES += \
     DesktopEntry.cpp \
     Dock.cpp \
     DockWidget.cpp \
+    Ewmh.cpp \
     IconImageProvider.cpp \
     Item.cpp \
     MenuWidget.cpp \
