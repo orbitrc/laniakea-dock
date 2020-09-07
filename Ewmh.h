@@ -11,6 +11,7 @@ public:
     Ewmh();
 
     static QString get_net_wm_name(uint32_t w);
+    static uint32_t get_net_wm_desktop(uint32_t w);
 
 private:
     static xcb_get_property_cookie_t get_property(xcb_connection_t *conn,
