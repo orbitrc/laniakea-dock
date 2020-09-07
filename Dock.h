@@ -25,6 +25,7 @@ class Dock : public QObject
     Q_PROPERTY(QList<Item*> items READ items NOTIFY itemsChanged)
     Q_PROPERTY(QList<QString> pinnedIds READ pinnedIds NOTIFY pinnedIdsChanged)
     Q_PROPERTY(QList<QString> itemIds READ itemIds NOTIFY itemIdsChanged)
+    Q_PROPERTY(int activeWindow READ activeWindow NOTIFY activeWindowChanged)
     Q_PROPERTY(QString activeWindowItemId READ activeWindowItemId NOTIFY activeWindowItemIdChanged)
 public:
     explicit Dock(QObject *parent = nullptr);
@@ -37,6 +38,7 @@ public:
     QList<Item*> items() const;
     QList<QString> pinnedIds() const;
     QList<QString> itemIds() const;
+    int activeWindow() const;
     QString activeWindowItemId() const;
 
     void appendItem(Item::ItemType type, QString cls, bool pinned = false);
@@ -63,7 +65,7 @@ public:
     Q_INVOKABLE void runApplication(const QString& id);
     Q_INVOKABLE void debugPrint(const QString& str) const;
 
-    QPixmap current_window_icon(const QString& id) const;
+    QPixmap window_icon(int w_id) const;
     QPixmap item_default_icon(const QString& id) const;
 
     //=====================

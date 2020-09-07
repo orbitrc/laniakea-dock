@@ -21,15 +21,27 @@ QPixmap IconImageProvider::requestPixmap(const QString& id, QSize *size, const Q
         requestedSize.height() > 0 ? requestedSize.height() : height
     );
 
-    // If no windows for item.
-    Item *item = this->_dock->item_by_id(id);
-    if (item && item->windows().length() == 0) {
-        return this->_dock->item_default_icon(id);
+    // If id is item id.
+    if (this->is_item_id(id)) {
+        Item *item = this->_dock->item_by_id(id);
+        if (item) {
+            return this->_dock->item_default_icon(id);
+        } else {
+            pixmap.fill(QColor(255, 0, 0, 100));
+            return pixmap;
+        }
     }
 
-    fprintf(stderr, "IconImageProvider::requestPixmap - id: %s (%s)\n",
-        id.toStdString().c_str(), this->_dock->itemClassById(id).toStdString().c_str());
-    QPixmap p = this->_dock->current_window_icon(id);
-
+    // If id is window id.
+    QPixmap p = this->_dock->window_icon(id.toInt());
     return p;
+}
+
+bool IconImageProvider::is_item_id(const QString &val) const
+{
+    if (val.length() == 36 && val[8] == '-') {
+        return true;
+    }
+
+    return false;
 }

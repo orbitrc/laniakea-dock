@@ -128,6 +128,11 @@ void Dock::appendItem(Item *item)
     emit this->itemAdded();
 }
 
+int Dock::activeWindow() const
+{
+    return this->m_activeWindow;
+}
+
 QString Dock::activeWindowItemId() const
 {
     Item *item = nullptr;
@@ -147,20 +152,9 @@ QString Dock::activeWindowItemId() const
     return QString();
 }
 
-QPixmap Dock::current_window_icon(const QString &id) const
+QPixmap Dock::window_icon(int w_id) const
 {
-    Item *item = nullptr;
-
-    item = this->item_by_id(id);
-
-    if (item != nullptr && item->windows().length() > 0) {
-        fprintf(stderr, "Dock::current_window_icon - Found item: %s\n", item->id().toStdString().c_str());
-        return this->get_window_icon(item->windows()[0], 48);
-    }
-
-    QPixmap default_pixmap(1, 1);
-    default_pixmap.fill(QColor(0, 255, 0, 100));
-    return default_pixmap;
+    return this->get_window_icon(w_id, 48);
 }
 
 QPixmap Dock::item_default_icon(const QString &id) const

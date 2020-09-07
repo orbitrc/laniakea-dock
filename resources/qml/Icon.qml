@@ -75,7 +75,7 @@ Rectangle {
     width: 48
     height: 48
 
-    source: 'image://icons/' + root.item.id
+    source: 'image://icons/' + (root.isActive() ? root.activeWindow() : root.item.id)
 
     cache: false
   }
@@ -118,6 +118,15 @@ Rectangle {
 
   function isActive() {
     return root.item.id === Dock.activeWindowItemId;
+  }
+
+  function activeWindow() {
+    for (let i = 0; i < root.item.windows.length; ++i) {
+      if (Dock.activeWindow === root.item.windows[i]) {
+        return root.item.windows[i];
+      }
+    }
+    return '';
   }
 
   function updateIconGeometry() {
