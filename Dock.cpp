@@ -864,4 +864,22 @@ void Dock::pinItem(const Item *item)
 
 void Dock::unpinItem(const Item *item)
 {
+    // Find index.
+    int index = -1;
+    for (int i = 0; i < this->m_items.length(); ++i) {
+        if (this->m_items[i] == item) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index == -1) {
+        fprintf(stderr, "Dock::unpinItem - no such item\n");
+        return;
+    }
+
+    if (!this->_config->remove_section(index)) {
+        fprintf(stderr, "Dock::unpinItem - remove section failed.\n");
+    }
+    // TODO: save
 }
