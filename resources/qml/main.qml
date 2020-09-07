@@ -2,12 +2,14 @@ import QtQuick 2.12
 import QtQuick.Window 2.12
 
 Rectangle {
-  width: 800
+  width: (64 * Dock.items.length) + (iconsLayout.spacing * Dock.items.length) + 20
   height: 64
 
   color: "#a9a9a9"
 
   Flow {
+    id: iconsLayout
+
     spacing: 1
 
     Repeater {
