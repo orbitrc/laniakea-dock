@@ -533,6 +533,15 @@ QPixmap Dock::get_window_icon(unsigned long w_id, unsigned long req_size) const
     fprintf(stderr, "Dock::get_window_icon(0x%lx)\n", w_id);
     ret = this->get_window_property(w_id, LA_DOCK_EWMH_NET_WM_ICON, XA_CARDINAL, &size);
 
+    // If size zero, fallback icon pixmap.
+    if (size == 0) {
+        XFree(ret);
+        QPixmap fallback_window_icon(1, 1);
+        fallback_window_icon.fill(QColor(255, 0, 0, 100));
+
+        return fallback_window_icon;
+    }
+
     fprintf(stderr, "%ld\n", size);
     unsigned long *icon;
     icon = (unsigned long*)ret;
