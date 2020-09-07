@@ -24,6 +24,7 @@ public:
     // Insert, append, remove.
     bool append_section(const QMap<QString, QString>& values);
     bool insert_section(size_t index, const QMap<QString, QString>& values);
+    bool remove_section(size_t index);
 
 private:
     QMap<QString, QMap<QString, QString>> _config;

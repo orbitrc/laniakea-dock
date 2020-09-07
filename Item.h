@@ -28,6 +28,9 @@ public:
     explicit Item(ItemType type, const QString& path = "", QObject *parent = nullptr);
     ~Item();
 
+    //======================
+    // Property methods
+    //======================
     QString id() const;
     void setId(const QString& id);
 
@@ -52,6 +55,9 @@ public:
     void setIconGeometry(const QRect& rect);
 
 signals:
+    //===============================
+    // Property notify signals
+    //===============================
     void idChanged(const QString& id);
     void pathChanged(const QString& path);
     void pinnedChanged(bool pinned);

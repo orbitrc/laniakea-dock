@@ -169,3 +169,28 @@ bool ConfigFile::insert_section(size_t index, const QMap<QString, QString> &valu
 
     return false;
 }
+
+bool ConfigFile::remove_section(size_t index)
+{
+    // Bound check.
+    if (static_cast<size_t>(this->_config.keys().length()) - 1 > index) {
+        return false;
+    }
+
+    // Remove.
+    QString section = QString("Item %1").arg(index + 1);
+    this->_config.remove(section);
+
+    // Re arange sections.
+    auto keys = this->_config.keys();
+    std::sort(keys.begin(), keys.end());
+    for (int i = index; i <= keys.length(); ++i) {
+        QString section_name = QString("Item %1").arg(i + 1);
+        QString new_section_name = QString("Item %1").arg(i);
+        auto values = this->_config.value(section_name);
+        this->_config.remove(section_name);
+        this->_config.insert(new_section_name, values);
+    }
+
+    return true;
+}
