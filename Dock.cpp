@@ -442,7 +442,7 @@ bool Dock::is_normal_window(unsigned long w_id) const
         &ret
     );
 
-    if (result != Success) {
+    if (result != Success || n_items == 0) {
         XFree(ret);
         return true;
     }
