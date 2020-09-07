@@ -102,6 +102,7 @@ Rectangle {
           Dock.activateWindow(wins[0]);
         }
       } else if (mouse.button === Qt.RightButton) {
+        PopUpManager.hideToolTip();
         PopUpManager.showContextMenu(root.item);
       }
     }

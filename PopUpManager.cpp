@@ -61,6 +61,11 @@ void PopUpManager::showContextMenuById(const QString &id)
 
 void PopUpManager::showToolTip(const QString &id)
 {
+    // If tool tip not deleted, delete it.
+    if (this->_tool_tip != nullptr) {
+        this->_tool_tip->close();
+    }
+
     ToolTipWidget *toolTipWidget = new ToolTipWidget(this->_engine);
     toolTipWidget->setSource(QUrl("qrc:/qml/ToolTip.qml"));
     toolTipWidget->rootObject()->setProperty("itemId", id);
