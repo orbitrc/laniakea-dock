@@ -178,11 +178,30 @@ QPixmap Dock::item_default_icon(const QString &id) const
 
                 return icon_pixmap;
             }
+            // Find and using default icon if available.
+            auto icon = this->_desktop_entry->entryIcon(desktop_filename.c_str());
+            if (icon != "") {
+                QPixmap default_pixmap;
+                if (icon == "system-file-manager") {
+                    default_pixmap.load(":/img/icons/system-file-manager.png");
+                } else if (icon == "utilities-terminal") {
+                    default_pixmap.load(":/img/icons/utilities-terminal.png");
+                } else {
+                    return this->item_fallback_icon();
+                }
+                return default_pixmap;
+            }
         }
     }
 
+    return this->item_fallback_icon();
+}
+
+QPixmap Dock::item_fallback_icon() const
+{
     QPixmap fallback_pixmap;
     fallback_pixmap.load(":/img/default-logo-x.svg");
+
     return fallback_pixmap;
 }
 

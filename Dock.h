@@ -67,6 +67,7 @@ public:
 
     QPixmap window_icon(int w_id) const;
     QPixmap item_default_icon(const QString& id) const;
+    QPixmap item_fallback_icon() const;
 
     //=====================
     // Helper methods

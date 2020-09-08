@@ -69,6 +69,19 @@ QString DesktopEntry::entryExec(const QString& filename) const
     return QString();
 }
 
+QString DesktopEntry::entryIcon(const QString &filename) const
+{
+    desktopentry_desktop *desktop = this->_desktops.value(filename, nullptr);
+    if (desktop != nullptr) {
+        const char *icon = desktopentry_desktop_entry_icon(desktop);
+
+        return QString(icon);
+    }
+
+    fprintf(stderr, "DesktopEntry::entryIcon - desktop is nullptr\n");
+    return QString();
+}
+
 QString DesktopEntry::iconPath(const QString& filename, size_t width, size_t height) const
 {
     size_t size = width;

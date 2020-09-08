@@ -196,6 +196,20 @@ pub extern "C" fn desktopentry_desktop_entry_exec(desktop: *const desktopentry_d
 }
 
 #[no_mangle]
+pub extern "C" fn desktopentry_desktop_entry_icon(desktop: *const desktopentry_desktop) -> *const c_char {
+    let box_de = unsafe {
+        Box::from_raw(desktop as *mut desktopentry_desktop)
+    };
+
+    let entry_icon = (*box_de).entry.icon_name;
+
+    // Put back the pointer.
+    Box::into_raw(box_de);
+
+    entry_icon
+}
+
+#[no_mangle]
 pub extern "C" fn desktopentry_desktop_get_proper_icon(desktop: *const desktopentry_desktop,
         size: usize) -> *mut c_char {
     const SCALABLE_SIZE: usize = 9999;

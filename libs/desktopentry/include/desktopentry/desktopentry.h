@@ -78,6 +78,15 @@ const char* desktopentry_desktop_entry_name(const desktopentry_desktop *desktop)
 const char* desktopentry_desktop_entry_exec(const desktopentry_desktop *desktop);
 
 /**
+ * Get the desktop entry icon name.
+ *
+ * @param desktop A desktopentry_desktop object.
+ * @return Desktop entry icon string or NULL pointer. The returned value should
+ *         not freed.
+ */
+const char* desktopentry_desktop_entry_icon(const desktopentry_desktop *desktop);
+
+/**
  * Get the proper sized icon path.
  */
 char* desktopentry_desktop_get_proper_icon(const desktopentry_desktop *desktop,
