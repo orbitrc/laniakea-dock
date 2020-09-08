@@ -4,6 +4,8 @@
 #include <string.h>
 #include <filesystem>
 
+#include <QRegularExpression>
+
 DesktopEntry::DesktopEntry()
 {
     this->init();
@@ -128,18 +130,28 @@ QString DesktopEntry::findFilenameByEntryExec(const QString &entryExec) const
     namespace fs = std::filesystem;
 
     auto end = this->_desktops.keyValueEnd();
+    auto regex_pattern = QRegularExpression("%[a-zA-Z]$");
     for (auto iter = this->_desktops.keyValueBegin(); iter != end; ++iter) {
-        QString exec = desktopentry_desktop_entry_exec(this->_desktops.value(iter->first));
+        auto filename = iter->first;
+        auto exec = this->entryExec(filename);
         // Strip desktop entry exec arguments.
-        exec = exec.split(' ')[0];
-        if (exec == entryExec) {
-            return iter->first;
+        auto idx = exec.indexOf(regex_pattern);
+        if (idx != -1) {
+            exec.remove(idx, 2);
+            exec = exec.trimmed();
+        }
+        // Strip if double quote contains.
+        if (exec.startsWith("\"") && exec.endsWith("\"")) {
+            exec.remove(0, 1);
+        }
+        if (exec.startsWith(entryExec)) {
+            return filename;
         }
         // Strip paths so get only compare exec filename.
         exec = fs::path(exec.toStdString()).filename().c_str();
         auto cmp = fs::path(entryExec.toStdString()).filename().c_str();
         if (exec == cmp) {
-            return iter->first;
+            return filename;
         }
     }
 
