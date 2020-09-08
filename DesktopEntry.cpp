@@ -1,5 +1,6 @@
 #include "DesktopEntry.h"
 
+#include <stdlib.h>
 #include <string.h>
 #include <filesystem>
 
@@ -26,6 +27,23 @@ void DesktopEntry::init()
         auto path = file.path().c_str();
         if (this->ends_with(path, ".desktop")) {
             desktopentry_desktop *desktop = desktopentry_desktop_parse(path);
+            this->_desktops.insert(file.path().filename().c_str(), desktop);
+        }
+    }
+    // Add or override .desktop files in local applications directory.
+    QString local_path = QString(LA_DOCK_LOCAL_APPLICATIONS_PATH).replace("~", getenv("HOME"));
+    auto local_dir_iter = fs::directory_iterator(local_path.toStdString().c_str());
+    for (auto& file: local_dir_iter) {
+        auto path = file.path().c_str();
+        if (this->ends_with(path, ".desktop")) {
+            fprintf(stderr, "Desktop: %s\n", path);
+            desktopentry_desktop *desktop = desktopentry_desktop_parse(path);
+            // Remove if file in /usr/share/applications.
+            if (this->_desktops.contains(file.path().filename().c_str())) {
+                auto desktop_p = this->_desktops.value(file.path().filename().c_str());
+                desktopentry_desktop_free(desktop_p);
+                this->_desktops.remove(file.path().filename().c_str());
+            }
             this->_desktops.insert(file.path().filename().c_str(), desktop);
         }
     }
