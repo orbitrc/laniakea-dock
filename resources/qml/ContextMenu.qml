@@ -6,7 +6,7 @@ Item {
   property var item: null
 
   width: (clickToDebug) ? largestWidth() : 160
-  height: 260
+  height: 280
 
   Rectangle {
     id: menuRect
@@ -70,6 +70,16 @@ Item {
         checked: (root.item) ? (root.item.pinned ? true : false) : ''
         action: function() {
           root.item.pinned = !root.item.pinned;
+        }
+
+        width: largestWidth()
+      }
+      MenuItem {
+        title: 'Close'
+        action: function() {
+          for (let i = 0; i < root.item.windows.length; ++i) {
+            Dock.closeWindow(root.item.windows[i]);
+          }
         }
 
         width: largestWidth()

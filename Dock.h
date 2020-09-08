@@ -59,6 +59,10 @@ public:
     /// @return Found proper name.
     Q_INVOKABLE QString itemProperIconName(const QString& id);
     Q_INVOKABLE void activateWindow(int wId);
+    /// @brief Close window.
+    ///
+    /// @param wId The window id to close.
+    Q_INVOKABLE void closeWindow(int wId);
     /// @brief Run application.
     ///
     /// @param id The item's id.

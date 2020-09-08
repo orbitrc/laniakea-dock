@@ -11,6 +11,7 @@
 #include <X11/Xatom.h>
 
 #include "ConfigFile.h"
+#include "Ewmh.h"
 
 Dock::Dock(QObject *parent)
     : QObject(parent)
@@ -291,6 +292,11 @@ QString Dock::itemProperIconName(const QString& id)
 void Dock::activateWindow(int wId)
 {
     this->activate_window(wId);
+}
+
+void Dock::closeWindow(int wId)
+{
+    Ewmh::send_net_close_window(wId);
 }
 
 void Dock::runApplication(const QString& id)
