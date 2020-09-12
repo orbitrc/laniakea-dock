@@ -15,6 +15,9 @@ protected:
     virtual bool event(QEvent *) override;
 
 private:
+    /// \brief Set dock's position.
+    void change_dock_geometry();
+
     /// \brief Get widget position based primary screen's geometry.
     ///
     /// \param height Dock's height.
@@ -25,6 +28,9 @@ private:
 
 signals:
     void geometryChanged();
+
+public slots:
+    void changeDockGeometry();
 };
 
 #endif // DOCKWIDGET_H

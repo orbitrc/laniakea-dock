@@ -23,6 +23,16 @@ DockWidget::DockWidget(QQmlEngine *engine, QWidget *parent)
             setGeometry(pos.x(), pos.y(), width(), height());
         }
     });
+    // Screen added/removed signals.
+    auto app = qobject_cast<QGuiApplication*>(QGuiApplication::instance());
+    QObject::connect(app, &QGuiApplication::screenAdded,
+                     this, &DockWidget::changeDockGeometry);
+    QObject::connect(app, &QGuiApplication::screenRemoved,
+                     this, &DockWidget::changeDockGeometry);
+    // Screen position moved signal.
+    auto primary_screen = QGuiApplication::primaryScreen();
+    QObject::connect(primary_screen, &QScreen::geometryChanged,
+                     this, &DockWidget::changeDockGeometry);
 }
 
 //===================
@@ -151,4 +161,14 @@ void DockWidget::set_widget_strut()
 
     // Disconnect.
     xcb_disconnect(conn);
+}
+
+//=======================
+// Public slots
+//=======================
+void DockWidget::changeDockGeometry()
+{
+    int h = rootObject()->property("height").toInt();
+    auto pos = this->primary_screen_position(h);
+    setGeometry(pos.x(), pos.y(), width(), height());
 }
