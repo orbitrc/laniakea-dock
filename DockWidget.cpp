@@ -1,5 +1,6 @@
 #include "DockWidget.h"
 
+#include <QGuiApplication>
 #include <QQuickItem>
 #include <QScreen>
 
@@ -17,8 +18,19 @@ DockWidget::DockWidget(QQmlEngine *engine, QWidget *parent)
 
     QObject::connect(this, &QQuickWidget::statusChanged, this, [this](QQuickWidget::Status status) {
         if (status == QQuickWidget::Ready) {
+            auto primaryScreen = QGuiApplication::primaryScreen();
+
             int h = rootObject()->property("height").toInt();
-            int y = screen()->geometry().height() - h;
+            int y = 0;
+            // Primary screen is upper.
+            if (primaryScreen->geometry().y() == 0) {
+                y = screen()->geometry().height() - h;
+            }
+            // Primary screen is lower.
+            if (primaryScreen->geometry().y() > 0) {
+                y = (screen()->geometry().height() + primaryScreen->geometry().height()) - h;
+            }
+            qDebug() << QGuiApplication::primaryScreen()->geometry();
             setGeometry(0, y, width(), height());
         }
     });
