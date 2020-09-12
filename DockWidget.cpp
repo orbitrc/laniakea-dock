@@ -18,20 +18,10 @@ DockWidget::DockWidget(QQmlEngine *engine, QWidget *parent)
 
     QObject::connect(this, &QQuickWidget::statusChanged, this, [this](QQuickWidget::Status status) {
         if (status == QQuickWidget::Ready) {
-            auto primaryScreen = QGuiApplication::primaryScreen();
-
             int h = rootObject()->property("height").toInt();
-            int y = 0;
-            // Primary screen is upper.
-            if (primaryScreen->geometry().y() == 0) {
-                y = screen()->geometry().height() - h;
-            }
-            // Primary screen is lower.
-            if (primaryScreen->geometry().y() > 0) {
-                y = (screen()->geometry().height() + primaryScreen->geometry().height()) - h;
-            }
+            auto pos = this->primary_screen_position(h);
             qDebug() << QGuiApplication::primaryScreen()->geometry();
-            setGeometry(0, y, width(), height());
+            setGeometry(pos.x(), pos.y(), width(), height());
         }
     });
 }
@@ -62,6 +52,15 @@ bool DockWidget::event(QEvent *evt)
 //===================
 // Private methods
 //===================
+QPoint DockWidget::primary_screen_position(int height) const
+{
+    auto primaryScreen = QGuiApplication::primaryScreen();
+    int x = primaryScreen->geometry().x();
+    int y = (primaryScreen->geometry().y() + primaryScreen->geometry().height()) - height;
+
+    return QPoint(x, y);
+}
+
 void DockWidget::set_on_all_desktop()
 {
     Display *dpy;
