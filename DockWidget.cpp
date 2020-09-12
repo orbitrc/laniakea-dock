@@ -91,11 +91,13 @@ static uint32_t lowest_bottom_y()
     auto screens = QGuiApplication::screens();
     for (auto&& screen: screens) {
         QScreen *cmp = screen;
-        if (cmp->geometry().y() > lowest_screen->geometry().y()) {
+        QRect cmp_geo = cmp->geometry();
+        if (cmp_geo.y() + cmp_geo.height() > lowest_screen->geometry().y() + lowest_screen->geometry().height()) {
             lowest_screen = screen;
         }
     }
 
+    // If primary screen is lowest positioned, just return 0.
     if (lowest_screen == QGuiApplication::primaryScreen()) {
         return 0;
     }
