@@ -55,6 +55,55 @@ bool DockWidget::event(QEvent *evt)
     return QQuickWidget::event(evt);
 }
 
+//=====================
+// Static functions
+//=====================
+
+// This function is duct taped, not perfect. Fix this later or migrate to
+// another function.
+static uint32_t lowest_bottom_y()
+{
+    QScreen *lowest_screen = QGuiApplication::primaryScreen();
+
+    auto screens = QGuiApplication::screens();
+    for (auto&& screen: screens) {
+        QScreen *cmp = screen;
+        QRect cmp_geo = cmp->geometry();
+        if (cmp_geo.y() + cmp_geo.height() > lowest_screen->geometry().y() + lowest_screen->geometry().height()) {
+            lowest_screen = screen;
+        }
+    }
+
+    // If primary screen is lowest positioned, just return 0.
+    if (lowest_screen == QGuiApplication::primaryScreen()) {
+        return 0;
+    }
+
+    return lowest_screen->geometry().height();
+}
+
+static uint32_t lowest_bottom_x()
+{
+    QScreen *lowest_screen = QGuiApplication::primaryScreen();
+
+    auto screens = QGuiApplication::screens();
+    for (auto&& screen: screens) {
+        QScreen *cmp = screen;
+        QRect cmp_geo = cmp->geometry();
+        if (cmp_geo.x() + cmp_geo.width() < lowest_screen->geometry().x() + lowest_screen->geometry().width()) {
+            lowest_screen = screen;
+        }
+    }
+
+    // If primary screen is lowest positioned, just return 0.
+    if (lowest_screen == QGuiApplication::primaryScreen()) {
+        return 0;
+    }
+
+    return lowest_screen->geometry().width();
+}
+
+
 //===================
 // Private methods
 //===================
@@ -92,29 +141,6 @@ void DockWidget::set_on_all_desktop()
     XCloseDisplay(dpy);
 }
 
-// This function is duck taped, not perfect. Fix this later or migrate to
-// another function.
-static uint32_t lowest_bottom_y()
-{
-    QScreen *lowest_screen = QGuiApplication::primaryScreen();
-
-    auto screens = QGuiApplication::screens();
-    for (auto&& screen: screens) {
-        QScreen *cmp = screen;
-        QRect cmp_geo = cmp->geometry();
-        if (cmp_geo.y() + cmp_geo.height() > lowest_screen->geometry().y() + lowest_screen->geometry().height()) {
-            lowest_screen = screen;
-        }
-    }
-
-    // If primary screen is lowest positioned, just return 0.
-    if (lowest_screen == QGuiApplication::primaryScreen()) {
-        return 0;
-    }
-
-    return lowest_screen->geometry().height();
-}
-
 void DockWidget::set_widget_strut()
 {
     xcb_connection_t *conn;
@@ -132,6 +158,8 @@ void DockWidget::set_widget_strut()
 
     // Get bottom position;
     auto bottom = lowest_bottom_y() + 64;
+    // Get bottom_start_x position;
+    auto bottom_start_x = lowest_bottom_x();
 
     // Send the message.
     uint32_t data[12];
@@ -140,7 +168,7 @@ void DockWidget::set_widget_strut()
     data[4] = 0; data[5] = 0;           // left_start_y, left_end_y
     data[6] = 0; data[7] = 0;           // right_start_y, right_end_y
     data[8] = 0; data[9] = 0;           // top_start_x, top_end_x
-    data[10] = 0; data[11] = 1000;         // bottom_start_x, bottom_end_x
+    data[10] = bottom_start_x; data[11] = bottom_start_x + 600;         // bottom_start_x, bottom_end_x
 
     xcb_void_cookie_t cookie = xcb_change_property_checked(
         conn,
@@ -171,4 +199,6 @@ void DockWidget::changeDockGeometry()
     int h = rootObject()->property("height").toInt();
     auto pos = this->primary_screen_position(h);
     setGeometry(pos.x(), pos.y(), width(), height());
+
+    this->set_widget_strut();
 }
