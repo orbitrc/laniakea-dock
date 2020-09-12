@@ -32,9 +32,6 @@ DockWidget::DockWidget(QQmlEngine *engine, QWidget *parent)
 
 bool DockWidget::event(QEvent *evt)
 {
-    if (evt->type() == QEvent::Paint) {
-        emit this->geometryChanged();
-    }
     switch (evt->type()) {
     case QEvent::Paint:
         emit this->geometryChanged();
