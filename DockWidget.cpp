@@ -20,7 +20,6 @@ DockWidget::DockWidget(QQmlEngine *engine, QWidget *parent)
         if (status == QQuickWidget::Ready) {
             int h = rootObject()->property("height").toInt();
             auto pos = this->primary_screen_position(h);
-            qDebug() << QGuiApplication::primaryScreen()->geometry();
             setGeometry(pos.x(), pos.y(), width(), height());
         }
     });
@@ -83,6 +82,27 @@ void DockWidget::set_on_all_desktop()
     XCloseDisplay(dpy);
 }
 
+// This function is duck taped, not perfect. Fix this later or migrate to
+// another function.
+static uint32_t lowest_bottom_y()
+{
+    QScreen *lowest_screen = QGuiApplication::primaryScreen();
+
+    auto screens = QGuiApplication::screens();
+    for (auto&& screen: screens) {
+        QScreen *cmp = screen;
+        if (cmp->geometry().y() > lowest_screen->geometry().y()) {
+            lowest_screen = screen;
+        }
+    }
+
+    if (lowest_screen == QGuiApplication::primaryScreen()) {
+        return 0;
+    }
+
+    return lowest_screen->geometry().height();
+}
+
 void DockWidget::set_widget_strut()
 {
     xcb_connection_t *conn;
@@ -98,14 +118,17 @@ void DockWidget::set_widget_strut()
     net_wm_strut_partial = intern_reply->atom;
     free(intern_reply);
 
+    // Get bottom position;
+    auto bottom = lowest_bottom_y() + 64;
+
     // Send the message.
     uint32_t data[12];
     data[0] = 0; data[1] = 0;         // left, right
-    data[2] = 0; data[3] = 64;     // top, bottom
+    data[2] = 0; data[3] = bottom;     // top, bottom
     data[4] = 0; data[5] = 0;           // left_start_y, left_end_y
     data[6] = 0; data[7] = 0;           // right_start_y, right_end_y
-    data[8] = 0; data[9] = 1000;           // top_start_x, top_end_x
-    data[10] = 0; data[11] = 0;         // bottom_start_x, bottom_end_x
+    data[8] = 0; data[9] = 0;           // top_start_x, top_end_x
+    data[10] = 0; data[11] = 1000;         // bottom_start_x, bottom_end_x
 
     xcb_void_cookie_t cookie = xcb_change_property_checked(
         conn,
