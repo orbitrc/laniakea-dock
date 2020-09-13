@@ -18,10 +18,33 @@ public:
 
     void init();
 
+    /// \brief TODO: Add comment.
     QString path(const QString& filename) const;
+
+    /// \brief Get the value for key Name in [Entry] section by filename.
+    ///
+    /// \param filename The filename of .desktop file.
+    /// \return The value for key Name.
     QString entryName(const QString& filename) const;
+
+    /// \brief Get the value for key Exec in [Entry] section by filename.
+    ///
+    /// \param filename The filename of .desktop file.
+    /// \return The value for key Exec.
     QString entryExec(const QString& filename) const;
+
+    /// \brief Get the value for key Icon in [Entry] section by filename.
+    ///
+    /// \param filename The filename of .desktop file.
+    /// \return The value for key Icon.
     QString entryIcon(const QString& filename) const;
+
+    /// \brief Get the proper sized icon path by filename.
+    ///
+    /// \param filename The filename of .desktop file.
+    /// \param width The width of icon want to get.
+    /// \param height The height of icon want to get.
+    /// \return Found icon path or return empty string.
     QString iconPath(const QString& filename, size_t width, size_t height) const;
 
     //======================
@@ -33,6 +56,7 @@ public:
     ///
     /// @return Filename of desktop. If not exists then returns empty string.
     QString findFilenameByEntryExec(const QString& entryExec) const;
+
     /// @brief Find filename by given .desktop file path.
     ///
     /// @param path The path that find by.
