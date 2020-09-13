@@ -426,6 +426,7 @@ bool Dock::is_normal_window(unsigned long w_id) const
     unsigned char *ret;
     int result;
     Atom type_normal;
+    Atom type_menu;
     Atom type_dock;
 
     // Get property.
@@ -452,10 +453,15 @@ bool Dock::is_normal_window(unsigned long w_id) const
     }
 
     type_dock = XInternAtom(this->_dpy, "_NET_WM_WINDOW_TYPE_DOCK", False);
+    type_menu = XInternAtom(this->_dpy, "_NET_WM_WINDOW_TYPE_MENU", False);
     type_normal = XInternAtom(this->_dpy, "_NET_WM_WINDOW_TYPE_NORMAL", False);
 
     for (unsigned long i = 0; i < n_items; ++i) {
         if (((Atom*)ret)[i] == type_dock) {
+            XFree(ret);
+            return false;
+        }
+        if (((Atom*)ret)[i] == type_menu) {
             XFree(ret);
             return false;
         }
