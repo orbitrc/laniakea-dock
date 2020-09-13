@@ -5,7 +5,7 @@ Item {
 
   property string itemId
 
-  width: text.implicitWidth + 20
+  width: text.implicitWidth + 40  // 20 for margins, 20 for paddings.
   height: 48 + 10
 
   Rectangle {
@@ -14,10 +14,12 @@ Item {
     anchors.margins: 10
 
     color: "black"
+    radius: 6
 
     Text {
       id: text
 
+      anchors.centerIn: parent
       text: Dock.itemProperIconName(root.itemId)
       color: "white"
       font.pixelSize: 18

@@ -6,9 +6,10 @@ ToolTipWidget::ToolTipWidget(QQmlEngine *engine, QWidget *parent)
     : QQuickWidget(engine, parent)
 {
     setAttribute(Qt::WA_X11NetWmWindowTypeToolTip);
-    setWindowFlag(Qt::ToolTip);
+//    setWindowFlag(Qt::ToolTip);
     setWindowFlag(Qt::NoDropShadowWindowHint);
     setWindowFlag(Qt::FramelessWindowHint);
+    setWindowFlag(Qt::X11BypassWindowManagerHint);
 
     setAttribute(Qt::WA_TranslucentBackground);
     setAttribute(Qt::WA_AlwaysStackOnTop);
