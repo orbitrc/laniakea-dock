@@ -10,6 +10,8 @@ MenuWidget::MenuWidget(QQmlEngine *engine, QWidget *parent)
     setAttribute(Qt::WA_X11NetWmWindowTypeMenu);
     setWindowFlag(Qt::FramelessWindowHint);
 
+    setAttribute(Qt::WA_DeleteOnClose);
+
     setAttribute(Qt::WA_TranslucentBackground);
     setAttribute(Qt::WA_AlwaysStackOnTop);
     setClearColor(Qt::transparent);
@@ -47,7 +49,6 @@ void MenuWidget::mousePressEvent(QMouseEvent *evt)
         }
 
         close();
-        deleteLater();
     }
 
     QQuickWidget::mousePressEvent(evt);
@@ -63,7 +64,6 @@ void MenuWidget::mouseReleaseEvent(QMouseEvent *evt)
         }
 
         close();
-        deleteLater();
     }
 
     QQuickWidget::mouseReleaseEvent(evt);
