@@ -218,6 +218,19 @@ pub extern "C" fn desktopentry_desktop_get_proper_icon(desktop: *const desktopen
         Box::from_raw(desktop as *mut desktopentry_desktop)
     };
 
+    // If icon is absolute path, return that.
+    let icon_name = unsafe {
+        CStr::from_ptr((*box_desktop).entry.icon_name)
+    };
+    let icon_name = icon_name.to_str().unwrap();
+    if icon_name.starts_with('/') {
+        let ret = CString::new(icon_name).unwrap();
+        // Put back boxes.
+        Box::into_raw(box_desktop);
+
+        return ret.into_raw();
+    }
+
     // Cast icons.
     let icons = unsafe {
         Box::from_raw((*box_desktop).entry.icons as *mut Vec::<String>)
