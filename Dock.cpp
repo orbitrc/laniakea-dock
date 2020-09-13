@@ -76,27 +76,6 @@ QList<Item*> Dock::items() const
     return this->m_items;
 }
 
-QList<QString> Dock::pinnedIds() const
-{
-    QList<QString> ids;
-    for (int i = 0; i < this->m_items.length(); ++i) {
-        if (this->m_items[i]->pinned()) {
-            ids.append(this->m_items[i]->id());
-        }
-    }
-    return ids;
-}
-
-QList<QString> Dock::itemIds() const
-{
-    QList<QString> ids;
-    for (int i = 0; i < this->m_items.length(); ++i) {
-        ids.append(this->m_items[i]->id());
-    }
-
-    return ids;
-}
-
 
 void Dock::appendItem(Item::ItemType type, QString cls, bool pinned)
 {
@@ -803,7 +782,6 @@ void Dock::activate_window(unsigned long w_id)
 
 void Dock::onItemAdded()
 {
-    emit this->itemIdsChanged();
     emit this->itemsChanged();
 }
 
@@ -852,7 +830,6 @@ void Dock::onWindowRemoved(unsigned long wId)
     // Remove an item if obsolete now.
     if (item->windows().length() == 0 && !item->pinned()) {
         this->m_items.removeOne(item);
-        emit this->itemIdsChanged();
         emit this->itemsChanged();
     }
 }

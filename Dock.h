@@ -23,8 +23,6 @@ class Dock : public QObject
 
     Q_PROPERTY(QList<int> windows READ windows NOTIFY windowsChanged)
     Q_PROPERTY(QList<Item*> items READ items NOTIFY itemsChanged)
-    Q_PROPERTY(QList<QString> pinnedIds READ pinnedIds NOTIFY pinnedIdsChanged)
-    Q_PROPERTY(QList<QString> itemIds READ itemIds NOTIFY itemIdsChanged)
     Q_PROPERTY(int activeWindow READ activeWindow NOTIFY activeWindowChanged)
     Q_PROPERTY(QString activeWindowItemId READ activeWindowItemId NOTIFY activeWindowItemIdChanged)
 public:
@@ -36,8 +34,6 @@ public:
     //=====================
     QList<int> windows() const;
     QList<Item*> items() const;
-    QList<QString> pinnedIds() const;
-    QList<QString> itemIds() const;
     int activeWindow() const;
     QString activeWindowItemId() const;
 
@@ -127,8 +123,6 @@ signals:
     void itemsChanged();
     void windowAdded(unsigned long wId);
     void windowRemoved(unsigned long wId);
-    void pinnedIdsChanged();
-    void itemIdsChanged();
     void itemAdded();
     void activeWindowChanged(unsigned long wId);
     void activeWindowItemIdChanged();
