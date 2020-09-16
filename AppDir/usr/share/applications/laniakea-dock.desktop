@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Dock
+Type=Application
+TryExec=
+Exec=/usr/bin/laniakea-dock
+Icon=laniakea-dock
+Categories=System;

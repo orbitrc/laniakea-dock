@@ -1,2 +1,8 @@
 *.pro.user
 build/
+
+# AppImage
+appimagetool-*.AppImage
+*.AppImage
+AppDir/usr/lib
+AppDir/usr/bin
