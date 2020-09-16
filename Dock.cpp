@@ -524,6 +524,10 @@ QString Dock::get_wm_class(unsigned long w_id) const
     unsigned long size;
     unsigned char *ret;
     ret = this->get_window_property(w_id, "WM_CLASS", XA_STRING, &size);
+    if (size == 0) {
+        XFree(ret);
+        return QString();
+    }
 
     char *iter = (char*)ret;
     for (; *iter != '\0'; ++iter) {
@@ -801,6 +805,11 @@ void Dock::onWindowAdded(unsigned long wId)
     emit this->windowsChanged();
 
     QString wm_class = this->get_wm_class(wId);
+    // If window immediately closed, cannot get WM_CLASS.
+    if (wm_class == "") {
+        fprintf(stderr, "Failed to get WM_CLASS.\n");
+        return;
+    }
 
     Item *item = this->find_item_by_class(wm_class);
     QString path;
@@ -832,6 +841,9 @@ void Dock::onWindowRemoved(unsigned long wId)
     emit this->windowsChanged();
 
     Item *item = this->find_item_by_w_id(wId);
+    if (item == nullptr) {
+        return;
+    }
     item->removeWindow(wId);
     // Remove an item if obsolete now.
     if (item->windows().length() == 0 && !item->pinned()) {
