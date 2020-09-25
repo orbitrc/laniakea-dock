@@ -22,6 +22,11 @@ public:
     //=================================
     static QString get_net_wm_name(uint32_t w);
     static uint32_t get_net_wm_desktop(uint32_t w);
+    /// \brief Get _NET_WM_PID property for window.
+    ///
+    /// \param w Window ID.
+    /// \return PID of window or 0 if not property exists.
+    static uint32_t get_net_wm_pid(uint32_t w);
 
 private:
     static xcb_get_property_cookie_t get_property(xcb_connection_t *conn,

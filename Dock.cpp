@@ -618,17 +618,6 @@ QPixmap Dock::get_window_icon(unsigned long w_id, unsigned long req_size) const
     return pixmap;
 }
 
-unsigned long Dock::get_net_wm_pid(unsigned long w_id) const
-{
-    unsigned long size;
-    unsigned char *ret;
-    ret = this->get_window_property(w_id, "_NET_WM_PID", XA_CARDINAL, &size);
-    auto pid = *(unsigned long*)ret;
-    XFree(ret);
-
-    return pid;
-}
-
 void Dock::dummy_event()
 {
     XClientMessageEvent evt;
@@ -700,7 +689,10 @@ QString Dock::find_exec_path_by_w_id(unsigned long w_id)
 {
     namespace fs = std::filesystem;
 
-    auto pid = this->get_net_wm_pid(w_id);
+    auto pid = Ewmh::get_net_wm_pid(w_id);
+    if (pid == 0) {
+        return QString();
+    }
     auto proc_exe = QString("/proc/%1/exe").arg(pid);
     std::error_code err;
     auto symlink_target = fs::read_symlink(proc_exe.toStdString(), err);

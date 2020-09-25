@@ -86,6 +86,23 @@ uint32_t Ewmh::get_net_wm_desktop(uint32_t w)
     return ret;
 }
 
+uint32_t Ewmh::get_net_wm_pid(uint32_t w)
+{
+    xcb_connection_t *conn = xcb_connect(NULL, NULL);
+
+    auto cookie = Ewmh::get_property(conn, w, "_NET_WM_PID", XCB_ATOM_CARDINAL);
+    xcb_get_property_reply_t *reply = xcb_get_property_reply(conn, cookie, NULL);
+    size_t len = xcb_get_property_value_length(reply);
+    void *val = xcb_get_property_value(reply);
+
+    uint32_t ret = (len != 0) ? *((uint32_t*)val) : 0;
+
+    free(reply);
+    xcb_disconnect(conn);
+
+    return ret;
+}
+
 //=======================
 // Private functions
 //=======================
