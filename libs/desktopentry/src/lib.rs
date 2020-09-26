@@ -5,6 +5,7 @@ use std::ffi::CStr;
 use std::ffi::CString;
 
 use std::collections::HashMap;
+use std::env;
 use std::fs;
 use std::fs::File;
 use std::path::Path;
@@ -310,7 +311,7 @@ pub extern "C" fn desktopentry_desktop_free(desktop: *mut desktopentry_desktop) 
 
 /// Get available icons path as `Vec<String>`.
 fn get_icons(icon_name: &str) -> Vec<String> {
-    // let local_icons_path = "~/.local/share/icons";
+    let local_share_icons_path = ".local/share/icons/hicolor";
     let share_icons_path = "/usr/share/icons/hicolor";
 
     let mut icons = Vec::<String>::new();
@@ -339,6 +340,57 @@ fn get_icons(icon_name: &str) -> Vec<String> {
                         let icon_name_search = String::from(icon_name) + ".";
                         if icon.file_name().to_str().unwrap().starts_with(&icon_name_search) {
                             icons.push(icon.path().to_str().unwrap().to_string());
+                        }
+                    }
+                }
+                Err(_) => {}
+            }
+        }
+    }
+    // Override local icons.
+    let home = env::var("HOME").unwrap();
+    let path = Path::new(&home);
+    let path = path.join(local_share_icons_path);
+    let local_share_icons = match fs::read_dir(&path) {
+        Ok(dir_entry) => dir_entry,
+        Err(e) => {
+            eprintln!("{:?}", e);
+            return icons;
+        }
+    };
+    for size in local_share_icons {
+        let size = size.unwrap();
+        if size.file_type().unwrap().is_dir() {
+            let size_path = Path::new(&path);
+            // e.g. ~/.local/share/icons/128x128
+            let size_path = size_path.join(size.file_name());
+            let apps_path = size_path.join("apps");
+            match fs::read_dir(apps_path) {
+                Ok(size_entry) => {
+                    for icon in size_entry {
+                        let icon = icon.unwrap();
+                        let icon_name_search = String::from(icon_name) + ".";
+                        if icon.file_name().to_str().unwrap().starts_with(&icon_name_search) {
+                            // Override if exists.
+                            let icon_path = String::from(icon.path().to_str().unwrap());
+                            let size = extract_size(&icon_path);
+                            for share_icon in icons.clone() {
+                                let share_size = extract_size(&share_icon);
+                                if size == share_size {
+                                    let idx = icons.iter().position(|i| i == &share_icon).unwrap();
+                                    icons.remove(idx);
+                                    icons.push(icon_path.clone());
+                                }
+                            }
+                            // Push if not exists.
+                            let mut share_sizes: Vec<String> = vec![];
+                            for share_icon in icons.clone() {
+                                let share_size = extract_size(&share_icon);
+                                share_sizes.push(String::from(share_size));
+                            }
+                            if !share_sizes.contains(&String::from(size)) {
+                                icons.push(icon_path.clone());
+                            }
                         }
                     }
                 }
@@ -406,7 +458,16 @@ mod tests {
 
     #[test]
     fn test_get_icons() {
-        super::get_icons("firefox");
+        let icons = super::get_icons("firefox");
+        for icon in icons {
+            println!("{}", icon);
+        }
+        println!("==================");
+
+        let icons = super::get_icons("QtProject-qtcreator");
+        for icon in icons {
+            println!("{}", icon);
+        }
     }
 
     #[test]

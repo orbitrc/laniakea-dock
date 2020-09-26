@@ -110,7 +110,7 @@ QString DesktopEntry::iconPath(const QString& filename, size_t width, size_t hei
     desktopentry_desktop *desktop = this->_desktops.value(filename, nullptr);
     if (desktop != nullptr) {
         char *path = desktopentry_desktop_get_proper_icon(desktop, size);
-        fprintf(stderr, "DesktopEntry::iconPath - path: %s\n", path);
+        fprintf(stderr, "DesktopEntry::iconPath - (%s) path: %s\n", filename.toStdString().c_str(), path);
         if (path != NULL) {
             auto icon_path = QString(path);
             desktopentry_string_free(path);
