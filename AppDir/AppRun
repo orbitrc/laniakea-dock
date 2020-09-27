@@ -1,4 +1,1 @@
-#!/bin/bash
-
-export LD_LIBRARY_PATH=$APPDIR/usr/lib
-$APPDIR/usr/bin/laniakea-dock
+usr/bin/laniakea-dock

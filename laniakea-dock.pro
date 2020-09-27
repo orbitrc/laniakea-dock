@@ -7,6 +7,8 @@ CONFIG(debug, debug|release) {
 
 INCLUDEPATH += libs/desktopentry/include
 
+QMAKE_LFLAGS += '-Wl,-rpath,\'\$$ORIGIN\'/../lib'
+
 LIBS += -lX11 -lxcb
 CONFIG(debug, debug|release) {
     LIBS += -L$$PWD/libs/desktopentry/target/debug
