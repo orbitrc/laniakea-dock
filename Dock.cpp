@@ -740,6 +740,11 @@ void Dock::update_active_window()
     ret = this->get_window_property(XDefaultRootWindow(this->_dpy),
         "_NET_ACTIVE_WINDOW", XA_WINDOW, &size);
 
+    if (size == 0) {
+        XFree(ret);
+        return;
+    }
+
     Window w = ((Window*)ret)[0];
     if ((int)w != this->m_activeWindow) {
         this->m_activeWindow = w;
