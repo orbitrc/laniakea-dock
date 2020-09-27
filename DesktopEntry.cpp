@@ -129,6 +129,11 @@ QString DesktopEntry::findFilenameByEntryExec(const QString &entryExec) const
 {
     namespace fs = std::filesystem;
 
+    // If entry exec is empty, return empty string immediately.
+    if (entryExec == "") {
+        return QString();
+    }
+
     auto end = this->_desktops.keyValueEnd();
     auto regex_pattern = QRegularExpression("%[a-zA-Z]$");
     for (auto iter = this->_desktops.keyValueBegin(); iter != end; ++iter) {
