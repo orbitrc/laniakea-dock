@@ -101,6 +101,9 @@ Rectangle {
         if (wins.length === 1) {
           Dock.activateWindow(wins[0]);
         }
+        if (wins.length >= 2) {
+          PopUpManager.showSwitcherMenu(root.item);
+        }
       } else if (mouse.button === Qt.RightButton) {
         PopUpManager.hideToolTip();
         PopUpManager.showContextMenu(root.item);

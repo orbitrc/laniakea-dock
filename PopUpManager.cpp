@@ -59,6 +59,24 @@ void PopUpManager::showContextMenuById(const QString &id)
     menuWidget->show();
 }
 
+void PopUpManager::showSwitcherMenu(Item *item)
+{
+    MenuWidget *menuWidget = new MenuWidget(this->_engine);
+    menuWidget->setSource(QUrl("qrc:/qml/SwitcherMenu.qml"));
+    menuWidget->rootObject()->setProperty("item", QVariant::fromValue(item));
+
+    // Set geometry.
+    int menu_width = menuWidget->rootObject()->property("width").toInt();
+    int offset_x = ((menu_width / 2) - (item->iconGeometry().width() / 2));
+    menuWidget->setGeometry(
+        item->iconGeometry().x() - offset_x,
+        item->iconGeometry().y() - menuWidget->height(),
+        menu_width, menuWidget->height()
+    );
+
+    menuWidget->show();
+}
+
 void PopUpManager::showToolTip(const QString &id)
 {
     // If tool tip not deleted, delete it.

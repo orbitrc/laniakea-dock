@@ -6,6 +6,7 @@
         <file>qml/ToolTip.qml</file>
         <file>qml/ColorIndicator.qml</file>
         <file>qml/MenuItem.qml</file>
+        <file>qml/SwitcherMenu.qml</file>
         <file>img/default-logo-x.svg</file>
         <file>img/icons/system-file-manager.png</file>
         <file>img/icons/utilities-terminal.png</file>

@@ -18,6 +18,7 @@ public:
 
     Q_INVOKABLE void showContextMenu(Item *item);
     Q_INVOKABLE void showContextMenuById(const QString& id);
+    Q_INVOKABLE void showSwitcherMenu(Item *item);
     Q_INVOKABLE void showToolTip(const QString& id);
     Q_INVOKABLE void hideToolTip();
 signals:
