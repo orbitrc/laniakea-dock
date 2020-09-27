@@ -9,8 +9,19 @@
 #include "IconImageProvider.h"
 #include "PopUpManager.h"
 
+#define LA_DOCK_VERSION "0.1.0"
+
 int main(int argc, char *argv[])
 {
+    // Shell arguments processing.
+    for (int i = 0; i < argc; ++i) {
+        QString arg = argv[i];
+        if (arg == "--version") {
+            fprintf(stdout, "laniakea-dock %s\n", LA_DOCK_VERSION);
+            return 0;
+        }
+    }
+
     QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
     QCoreApplication::setApplicationName("Dock");
 
