@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -21,6 +23,10 @@ int main(int argc, char *argv[])
             return 0;
         }
     }
+
+    // Unset ARGV0 environ since this override executed application's argv[0]
+    // some case.
+    unsetenv("ARGV0");
 
     QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
     QCoreApplication::setApplicationName("Dock");
