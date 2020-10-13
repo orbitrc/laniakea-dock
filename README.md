@@ -18,6 +18,8 @@ $ make
 $ make appimage
 ```
 
+AppImage tool is automatically downloaded at first time.
+
 ### Install
 ```sh
 $ mkdir -p /usr/appimages
