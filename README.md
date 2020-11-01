@@ -2,6 +2,8 @@ laniakea-dock
 ================
 Laniakea desktop environment dock.
 
+This is a part of Laniakea desktop environment, but currently can be working standalone. This feature is not garranted for future version of it.
+
 Build
 ------
 
